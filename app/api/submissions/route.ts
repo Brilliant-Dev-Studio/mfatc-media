@@ -87,6 +87,12 @@ export async function POST(request: Request) {
   if (typeof body.admiredArtist !== "string" || body.admiredArtist.trim().length < 1) {
     errors.push("အားကျသော အနုပညာရှင်အမည် ထည့်ပါ။");
   }
+  if (typeof body.canComplete !== "boolean") {
+    errors.push("သင်တန်းကာလ ပြီးဆုံးအောင် တက်ရောက်နိုင်မှု ဖြေပါ။");
+  }
+  if (typeof body.familyApproval !== "boolean") {
+    errors.push("မိသားစုမှ ခွင့်ပြုမှု ဖြေပါ။");
+  }
   if (!isS3Key(body.nrcFront) || !isS3Key(body.nrcBack)) {
     errors.push("မှတ်ပုံတင် ရှေ့+နောက် ပုံ ၂ ပုံ တင်ပါ။");
   }
@@ -129,6 +135,8 @@ export async function POST(request: Request) {
     viberNo: body.viberNo!.trim(),
     lifeGoal: body.lifeGoal!.trim(),
     admiredArtist: body.admiredArtist!.trim(),
+    canComplete: body.canComplete as boolean,
+    familyApproval: body.familyApproval as boolean,
     nrcFront: body.nrcFront!,
     nrcBack: body.nrcBack!,
     portraits: body.portraits as string[],

@@ -19,6 +19,8 @@ type Row = {
   viber_no: string;
   life_goal: string;
   admired_artist: string;
+  can_complete: boolean;
+  family_approval: boolean;
   nrc_front: string;
   nrc_back: string;
   portraits: string[];
@@ -53,6 +55,8 @@ function rowToSubmission(r: Row): Submission {
     viberNo: r.viber_no,
     lifeGoal: r.life_goal ?? "",
     admiredArtist: r.admired_artist ?? "",
+    canComplete: Boolean(r.can_complete),
+    familyApproval: Boolean(r.family_approval),
     nrcFront: r.nrc_front,
     nrcBack: r.nrc_back,
     portraits: r.portraits,
@@ -196,13 +200,13 @@ export async function createSubmission(input: SubmissionInput): Promise<Submissi
     INSERT INTO submissions (
       id, name, father_name, mother_name, stage_name,
       age, birthday, address, about_yourself, facebook_link,
-      phone_no, viber_no, life_goal, admired_artist,
+      phone_no, viber_no, life_goal, admired_artist, can_complete, family_approval,
       nrc_front, nrc_back, portraits, art_statement, experience
     ) VALUES (
       ${id}, ${input.name}, ${input.fatherName}, ${input.motherName}, ${input.stageName},
       ${input.age}, ${input.birthday}, ${input.address}, ${input.aboutYourself},
       ${input.facebookLink}, ${input.phoneNo}, ${input.viberNo},
-      ${input.lifeGoal}, ${input.admiredArtist},
+      ${input.lifeGoal}, ${input.admiredArtist}, ${input.canComplete}, ${input.familyApproval},
       ${input.nrcFront}, ${input.nrcBack},
       ${portraitsJson}::jsonb, ${input.artStatement}, ${experienceJson}::jsonb
     )

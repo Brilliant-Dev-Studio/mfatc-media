@@ -104,6 +104,14 @@ function TalentPage({ sub }: { sub: Submission }) {
           </div>
         )}
         <div className="mag-section">
+          <h3 className="mag-h3">သင်တန်းပြီးဆုံးအောင် တက်ရောက်နိုင်မှု</h3>
+          <p className="mag-p">{sub.canComplete ? "ရှိ" : "မရှိ"}</p>
+        </div>
+        <div className="mag-section">
+          <h3 className="mag-h3">မိသားစုခွင့်ပြုမှု</h3>
+          <p className="mag-p">{sub.familyApproval ? "ခွင့်ပြု" : "မပြု"}</p>
+        </div>
+        <div className="mag-section">
           <h3 className="mag-h3">Artist Statement</h3>
           <p className="mag-p">{sub.artStatement}</p>
         </div>

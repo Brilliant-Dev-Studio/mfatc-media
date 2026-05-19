@@ -39,6 +39,8 @@ export function ensureSchema(): Promise<void> {
       await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS phone_no TEXT NOT NULL DEFAULT ''`;
       await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS life_goal TEXT NOT NULL DEFAULT ''`;
       await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS admired_artist TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS can_complete BOOLEAN NOT NULL DEFAULT FALSE`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS family_approval BOOLEAN NOT NULL DEFAULT FALSE`;
       await sql`CREATE INDEX IF NOT EXISTS submissions_created_at_idx ON submissions (created_at DESC)`;
     })().catch((e) => {
       ensured = null;

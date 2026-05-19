@@ -248,6 +248,12 @@ function Detail({ sub }: { sub: Submission }) {
             </>
           )}
 
+          <SectionLabel className="mt-5">သင်တန်းပြီးဆုံးအောင် တက်ရောက်နိုင်မှု</SectionLabel>
+          <p className="mt-2 text-sm leading-relaxed">{sub.canComplete ? "ရှိ" : "မရှိ"}</p>
+
+          <SectionLabel className="mt-5">မိသားစုခွင့်ပြုမှု</SectionLabel>
+          <p className="mt-2 text-sm leading-relaxed">{sub.familyApproval ? "ခွင့်ပြု" : "မပြု"}</p>
+
           <SectionLabel className="mt-5">Contact</SectionLabel>
           <div className="mt-2 flex flex-col gap-1 text-sm">
             <a href={sub.facebookLink} target="_blank" rel="noreferrer" className="gf-link">

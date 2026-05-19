@@ -29,11 +29,15 @@ export default function FormPage() {
   const [viberNo, setViberNo] = useState("");
   const [lifeGoal, setLifeGoal] = useState("");
   const [admiredArtist, setAdmiredArtist] = useState("");
+  const [canComplete, setCanComplete] = useState<boolean | null>(null);
+  const [familyApproval, setFamilyApproval] = useState<boolean | null>(null);
   const [nrcFront, setNrcFront] = useState<PhotoState>(null);
   const [nrcBack, setNrcBack] = useState<PhotoState>(null);
   const [portraits, setPortraits] = useState<PhotoState[]>([null, null, null, null]);
   const [artStatement, setArtStatement] = useState("");
-  const [experience, setExperience] = useState<ExperienceEntry[]>([{ ...EMPTY_EXP }]);
+  const [experience, setExperience] = useState<ExperienceEntry[]>(() =>
+    Array.from({ length: 5 }, () => ({ ...EMPTY_EXP })),
+  );
 
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -99,11 +103,13 @@ export default function FormPage() {
     setViberNo("");
     setLifeGoal("");
     setAdmiredArtist("");
+    setCanComplete(null);
+    setFamilyApproval(null);
     setNrcFront((prev) => { revokePreview(prev); return null; });
     setNrcBack((prev) => { revokePreview(prev); return null; });
     setPortraits((prev) => { prev.forEach(revokePreview); return [null, null, null, null]; });
     setArtStatement("");
-    setExperience([{ ...EMPTY_EXP }]);
+    setExperience(Array.from({ length: 5 }, () => ({ ...EMPTY_EXP })));
     setErrors([]);
   }
 
@@ -117,6 +123,16 @@ export default function FormPage() {
     const portraitKeys = portraits.map(keyOf);
     if (!nrcFrontKey || !nrcBackKey || portraitKeys.some((k) => !k)) {
       setErrors(["ပုံ အကုန် upload ပြီးအောင် စောင့်ပါ — ထပ်စမ်းပါ။"]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if (canComplete === null) {
+      setErrors(["သင်တန်းကာလ ပြီးဆုံးအောင် တက်ရောက်နိုင်ခြင်း ရှိ/မရှိ ရွေးပါ။"]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if (familyApproval === null) {
+      setErrors(["မိသားစုမှ ခွင့်ပြု/မပြု ရွေးပါ။"]);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -136,11 +152,13 @@ export default function FormPage() {
       viberNo: viberNo.trim(),
       lifeGoal: lifeGoal.trim(),
       admiredArtist: admiredArtist.trim(),
+      canComplete: canComplete === true,
+      familyApproval: familyApproval === true,
       nrcFront: nrcFrontKey,
       nrcBack: nrcBackKey,
       portraits: portraitKeys as string[],
       artStatement: artStatement.trim(),
-      experience: experience.filter((x) => x.title || x.organization || x.description),
+      experience: experience.filter((x) => x.title || x.period || x.description),
     };
     try {
       const res = await fetch("/api/submissions", {
@@ -184,10 +202,16 @@ export default function FormPage() {
         />
         <main className="mx-auto w-full max-w-160 px-4 py-6 sm:py-10">
           <div className="gf-card gf-stripe-top">
-          <h1 className="text-[22px] font-normal leading-tight sm:text-[26px]">
-            မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြင့်တင်ရေးသင်တန်း
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/IMG_4294.png"
+            alt="MFATC"
+            className="mb-3 h-12 w-auto sm:h-14"
+          />
+          <h1 className="whitespace-nowrap text-[13px] font-normal leading-tight sm:text-[22px]">
+            မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
           </h1>
-          <p className="mt-1 text-sm text-muted">Myanmar Film Acting Promotion Course</p>
+          <p className="mt-1 text-xs text-muted sm:text-sm">Myanmar Film Acting Promotion Course</p>
           <p className="mt-3 gf-helper">
             Submit လုပ်ပေးတာ ကျေးဇူးပါ။
           </p>
@@ -205,7 +229,12 @@ export default function FormPage() {
           </div>
         </div>
         <footer className="text-on-stage mt-4 px-2 text-center text-xs">
-          MFATC Studio · Yangon
+          <div>MFATC Studio · Yangon</div>
+          <div className="mt-1">
+            <a href="viber://chat?number=%2B95936536562" className="underline">
+              Viber — 0936536562
+            </a>
+          </div>
         </footer>
         </main>
       </div>
@@ -232,10 +261,16 @@ export default function FormPage() {
       <main className="mx-auto w-full max-w-160 px-4 py-6 sm:py-10">
         <form onSubmit={onSubmit} className="flex flex-col gap-3">
         <header className="gf-card gf-stripe-top">
-          <h1 className="text-[22px] font-normal leading-tight sm:text-[26px]">
-            မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြင့်တင်ရေးသင်တန်း
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/IMG_4294.png"
+            alt="MFATC"
+            className="mb-3 h-12 w-auto sm:h-14"
+          />
+          <h1 className="whitespace-nowrap text-[13px] font-normal leading-tight sm:text-[22px]">
+            မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
           </h1>
-          <p className="mt-1 text-sm text-muted">Myanmar Film Acting Promotion Course</p>
+          <p className="mt-1 text-xs text-muted sm:text-sm">Myanmar Film Acting Promotion Course</p>
           <div className="mt-4 gf-divider" />
           <p className="mt-3 text-sm">
             <span className="required-mark">*</span>
@@ -442,6 +477,54 @@ export default function FormPage() {
           />
         </Question>
 
+        <Question label="သင်တန်းကာလ ပြီးဆုံးအောင် တက်ရောက်နိုင်ခြင်း ရှိ/မရှိ" required>
+          <div className="mt-2 flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="canComplete"
+                checked={canComplete === true}
+                onChange={() => setCanComplete(true)}
+                required
+              />
+              <span>ရှိ</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="canComplete"
+                checked={canComplete === false}
+                onChange={() => setCanComplete(false)}
+              />
+              <span>မရှိ</span>
+            </label>
+          </div>
+        </Question>
+
+        <Question label="မိသားစုမှ ခွင့်ပြု/မပြု" required>
+          <div className="mt-2 flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="familyApproval"
+                checked={familyApproval === true}
+                onChange={() => setFamilyApproval(true)}
+                required
+              />
+              <span>ခွင့်ပြု</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="familyApproval"
+                checked={familyApproval === false}
+                onChange={() => setFamilyApproval(false)}
+              />
+              <span>မပြု</span>
+            </label>
+          </div>
+        </Question>
+
         <Question label="အနုပညာ လုပ်ဆောင်ချက် — short statement" required>
           <textarea
             required
@@ -453,46 +536,28 @@ export default function FormPage() {
           />
         </Question>
 
-        <Question label="Experience (optional)" helper="ရှိရင်သာ ထည့်ပါ — entry အများကြီး ထည့်လို့ရတယ်။">
+        <Question label="တက်ရောက် ခဲ့သော သင်တန်းများ (optional)" helper="ရှိရင်သာ ထည့်ပါ — ၅ ခုအထိ ထည့်လို့ရတယ်။">
           <div className="mt-3 flex flex-col gap-3">
             {experience.map((exp, idx) => (
               <div key={idx} className="rounded-md border border-border p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-wider text-muted">
-                    Entry {idx + 1}
-                  </span>
-                  {experience.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setExperience((prev) => prev.filter((_, i) => i !== idx))}
-                      className="gf-btn-text"
-                      style={{ height: 28, padding: "0 8px" }}
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
+                <span className="text-xs uppercase tracking-wider text-muted">
+                  Entry {idx + 1} (optional)
+                </span>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <input
-                    placeholder="Role / title"
+                    placeholder="သင်တန်းတက်ခဲ့သော ခုနှစ်"
+                    value={exp.period}
+                    onChange={(e) => updateExp(idx, { period: e.target.value })}
+                    className="gf-input"
+                  />
+                  <input
+                    placeholder="သင်တန်း နာမည်"
                     value={exp.title}
                     onChange={(e) => updateExp(idx, { title: e.target.value })}
                     className="gf-input"
                   />
-                  <input
-                    placeholder="Organization / event"
-                    value={exp.organization}
-                    onChange={(e) => updateExp(idx, { organization: e.target.value })}
-                    className="gf-input"
-                  />
-                  <input
-                    placeholder="Period (e.g. 2024 — 2025)"
-                    value={exp.period}
-                    onChange={(e) => updateExp(idx, { period: e.target.value })}
-                    className="gf-input sm:col-span-2"
-                  />
                   <textarea
-                    placeholder="ဘာတွေ လုပ်ခဲ့လဲ"
+                    placeholder="ဘာတွေလုပ်ခဲ့လဲ"
                     rows={2}
                     value={exp.description}
                     onChange={(e) => updateExp(idx, { description: e.target.value })}
@@ -501,15 +566,6 @@ export default function FormPage() {
                 </div>
               </div>
             ))}
-            <div>
-              <button
-                type="button"
-                onClick={() => setExperience((prev) => [...prev, { ...EMPTY_EXP }])}
-                className="gf-btn-outline"
-              >
-                + Add entry
-              </button>
-            </div>
           </div>
         </Question>
 
@@ -528,7 +584,12 @@ export default function FormPage() {
       </form>
 
       <footer className="text-on-stage mt-6 px-2 text-center text-xs">
-        MFATC Studio · Yangon
+        <div>MFATC Studio · Yangon</div>
+        <div className="mt-1">
+          <a href="viber://chat?number=%2B95936536562" className="underline">
+            Viber — 0936536562
+          </a>
+        </div>
       </footer>
       </main>
     </div>

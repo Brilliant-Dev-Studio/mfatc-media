@@ -21,6 +21,8 @@ export type Submission = {
   viberNo: string;
   lifeGoal: string;
   admiredArtist: string;
+  canComplete: boolean;
+  familyApproval: boolean;
   nrcFront: string;
   nrcBack: string;
   portraits: string[];
