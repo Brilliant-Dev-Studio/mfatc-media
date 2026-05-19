@@ -231,7 +231,7 @@ export default function FormPage() {
         <footer className="text-on-stage mt-4 px-2 text-center text-xs">
           <div>MFATC Studio · Yangon</div>
           <div className="mt-1">
-            <a href="viber://chat?number=%2B95936536562" className="underline">
+            <a href="viber://add?number=95936536562" className="underline">
               Viber — 0936536562
             </a>
           </div>
@@ -586,7 +586,7 @@ export default function FormPage() {
       <footer className="text-on-stage mt-6 px-2 text-center text-xs">
         <div>MFATC Studio · Yangon</div>
         <div className="mt-1">
-          <a href="viber://chat?number=%2B95936536562" className="underline">
+          <a href="viber://add?number=95936536562" className="underline">
             Viber — 0936536562
           </a>
         </div>
