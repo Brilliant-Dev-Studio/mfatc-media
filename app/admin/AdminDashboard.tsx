@@ -225,8 +225,8 @@ function Detail({ sub }: { sub: Submission }) {
           <div className="mt-2 flex flex-col gap-0.5 text-sm">
             <div><strong>{sub.name}</strong></div>
             {sub.stageName && <div className="text-muted">Stage name — {sub.stageName}</div>}
-            {sub.fatherName && <div className="text-muted">အဖေ — {sub.fatherName}</div>}
-            {sub.motherName && <div className="text-muted">အမေ — {sub.motherName}</div>}
+            {sub.fatherName && <div className="text-muted">ဖခင် — {sub.fatherName}</div>}
+            {sub.motherName && <div className="text-muted">မိခင် — {sub.motherName}</div>}
             <div className="text-muted">Age {sub.age} · Born {sub.birthday}</div>
             {sub.address && <div className="text-muted">နေရပ် — {sub.address}</div>}
           </div>

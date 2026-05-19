@@ -75,9 +75,9 @@ function TalentPage({ sub }: { sub: Submission }) {
           <div className="mag-section">
             <h3 className="mag-h3">Parents</h3>
             <p className="mag-p">
-              {sub.fatherName ? `အဖေ — ${sub.fatherName}` : ""}
+              {sub.fatherName ? `ဖခင် — ${sub.fatherName}` : ""}
               {sub.fatherName && sub.motherName ? " · " : ""}
-              {sub.motherName ? `အမေ — ${sub.motherName}` : ""}
+              {sub.motherName ? `မိခင် — ${sub.motherName}` : ""}
             </p>
           </div>
         )}

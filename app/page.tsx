@@ -184,7 +184,10 @@ export default function FormPage() {
         />
         <main className="mx-auto w-full max-w-160 px-4 py-6 sm:py-10">
           <div className="gf-card gf-stripe-top">
-          <h1 className="text-[28px] font-normal leading-tight">MFATC — Artist &amp; Talent Application</h1>
+          <h1 className="text-[22px] font-normal leading-tight sm:text-[26px]">
+            မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြင့်တင်ရေးသင်တန်း
+          </h1>
+          <p className="mt-1 text-sm text-muted">Myanmar Film Acting Promotion Course</p>
           <p className="mt-3 gf-helper">
             Submit လုပ်ပေးတာ ကျေးဇူးပါ။
           </p>
@@ -229,7 +232,10 @@ export default function FormPage() {
       <main className="mx-auto w-full max-w-160 px-4 py-6 sm:py-10">
         <form onSubmit={onSubmit} className="flex flex-col gap-3">
         <header className="gf-card gf-stripe-top">
-          <h1 className="text-[28px] font-normal leading-tight">MFATC — Artist &amp; Talent Application</h1>
+          <h1 className="text-[22px] font-normal leading-tight sm:text-[26px]">
+            မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြင့်တင်ရေးသင်တန်း
+          </h1>
+          <p className="mt-1 text-sm text-muted">Myanmar Film Acting Promotion Course</p>
           <div className="mt-4 gf-divider" />
           <p className="mt-3 text-sm">
             <span className="required-mark">*</span>
@@ -262,7 +268,7 @@ export default function FormPage() {
           />
         </Question>
 
-        <Question label="အဖေနာမည်" required>
+        <Question label="ဖခင်အမည်" required>
           <input
             type="text"
             required
@@ -273,7 +279,7 @@ export default function FormPage() {
           />
         </Question>
 
-        <Question label="အမေနာမည်" required>
+        <Question label="မိခင်အမည်" required>
           <input
             type="text"
             required
@@ -295,7 +301,7 @@ export default function FormPage() {
           />
         </Question>
 
-        <Question label="Age နဲ့ Birthday" required helper="Age က ၁၀–၉၉ ထဲက ဖြစ်ရမယ်။">
+        <Question label="Age နဲ့ Birthday" required helper="Age က ၁၈–၂၈ ထဲက ဖြစ်ရမယ်။">
           <div className="grid grid-cols-2 gap-4">
             <label className="flex flex-col">
               <span className="gf-helper mb-1">Age</span>
@@ -303,8 +309,8 @@ export default function FormPage() {
                 type="number"
                 required
                 inputMode="numeric"
-                min={10}
-                max={99}
+                min={18}
+                max={28}
                 placeholder="22"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}

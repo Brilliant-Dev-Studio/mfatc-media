@@ -55,8 +55,8 @@ export async function POST(request: Request) {
     errors.push("အနုပညာ လုပ်ရှားမှု အမည် ထည့်ပါ။");
   }
   const ageNum = Number(body.age);
-  if (!Number.isFinite(ageNum) || ageNum < 10 || ageNum > 99) {
-    errors.push("Age (10–99) မှန်ကန်စွာ ထည့်ပါ။");
+  if (!Number.isFinite(ageNum) || ageNum < 18 || ageNum > 28) {
+    errors.push("Age (18–28) မှန်ကန်စွာ ထည့်ပါ။");
   }
   if (typeof body.birthday !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(body.birthday)) {
     errors.push("Birthday (YYYY-MM-DD) မှန်ကန်စွာ ထည့်ပါ။");
