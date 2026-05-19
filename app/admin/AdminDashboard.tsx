@@ -1,19 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Submission, SubmissionListResponse } from "@/lib/types";
-
-type FieldKey = "all" | "name" | "facebook" | "viber" | "art";
 
 export function AdminDashboard({ username }: { username: string }) {
   const router = useRouter();
   const [data, setData] = useState<SubmissionListResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [q, setQ] = useState("");
-  const [field, setField] = useState<FieldKey>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -22,8 +18,6 @@ export function AdminDashboard({ username }: { username: string }) {
     const sp = new URLSearchParams({
       page: String(page),
       pageSize: "10",
-      q,
-      field,
     });
     const res = await fetch(`/api/submissions?${sp.toString()}`, { cache: "no-store" });
     if (res.ok) {
@@ -31,12 +25,11 @@ export function AdminDashboard({ username }: { username: string }) {
       setData(json);
     }
     setLoading(false);
-  }, [page, q, field]);
+  }, [page]);
 
   useEffect(() => {
-    const id = setTimeout(fetchData, q ? 220 : 0);
-    return () => clearTimeout(id);
-  }, [fetchData, q]);
+    fetchData();
+  }, [fetchData]);
 
   const onDeleteAll = async () => {
     if (total === 0) return;
@@ -88,37 +81,24 @@ export function AdminDashboard({ username }: { username: string }) {
         </div>
       </header>
 
-      <Filters
-        q={q}
-        field={field}
-        onQ={(v) => {
-          setQ(v);
-          setPage(1);
-        }}
-        onField={(v) => {
-          setField(v);
-          setPage(1);
-        }}
-      />
-
-      <div className="mt-3 flex items-center justify-between gap-3">
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-xs text-muted">
           ဒီစာမျက်နှာ data တွေကိုပဲ PDF အဖြစ် download ဆွဲမယ်
         </span>
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <button
             onClick={onDeleteAll}
             disabled={deleting || total === 0}
-            className="gf-btn-outline inline-flex items-center disabled:opacity-40"
+            className="gf-btn-outline inline-flex items-center justify-center whitespace-nowrap disabled:opacity-40"
             style={{ borderColor: "var(--gf-required)", color: "var(--gf-required)" }}
           >
             {deleting ? "Deleting…" : "Delete All"}
           </button>
           <a
-            href={`/admin/print?${new URLSearchParams({ page: String(page), pageSize: "10", q, field }).toString()}`}
+            href={`/admin/print?${new URLSearchParams({ page: String(page), pageSize: "10" }).toString()}`}
             target="_blank"
             rel="noreferrer"
-            className="gf-btn-outline inline-flex items-center"
+            className="gf-btn-outline inline-flex items-center justify-center whitespace-nowrap"
           >
             Download PDF
           </a>
@@ -166,56 +146,6 @@ export function AdminDashboard({ username }: { username: string }) {
 
       <Pagination page={data?.page ?? page} pageCount={pageCount} onPage={setPage} />
     </main>
-  );
-}
-
-function Filters({
-  q,
-  field,
-  onQ,
-  onField,
-}: {
-  q: string;
-  field: FieldKey;
-  onQ: (v: string) => void;
-  onField: (v: FieldKey) => void;
-}) {
-  const fields: { key: FieldKey; label: string }[] = useMemo(
-    () => [
-      { key: "all", label: "All" },
-      { key: "name", label: "Name" },
-      { key: "facebook", label: "Facebook" },
-      { key: "viber", label: "Viber" },
-      { key: "art", label: "Statement" },
-    ],
-    [],
-  );
-  return (
-    <div className="flex flex-col gap-2 rounded-md border border-border bg-white p-3 sm:flex-row sm:items-center">
-      <input
-        value={q}
-        onChange={(e) => onQ(e.target.value)}
-        placeholder="Search — name, link, viber, keyword…"
-        className="gf-input flex-1"
-        style={{ padding: "8px 4px", borderBottomWidth: 1 }}
-      />
-      <div className="flex flex-wrap gap-1">
-        {fields.map((f) => (
-          <button
-            key={f.key}
-            onClick={() => onField(f.key)}
-            className={
-              "rounded-full border px-3 py-1 text-xs font-medium transition " +
-              (field === f.key
-                ? "border-primary bg-(--gf-primary-tint) text-primary"
-                : "border-border text-muted hover:bg-(--gf-hover)")
-            }
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -294,18 +224,37 @@ function Detail({ sub }: { sub: Submission }) {
           <SectionLabel>Personal</SectionLabel>
           <div className="mt-2 flex flex-col gap-0.5 text-sm">
             <div><strong>{sub.name}</strong></div>
+            {sub.stageName && <div className="text-muted">Stage name — {sub.stageName}</div>}
+            {sub.fatherName && <div className="text-muted">အဖေ — {sub.fatherName}</div>}
+            {sub.motherName && <div className="text-muted">အမေ — {sub.motherName}</div>}
             <div className="text-muted">Age {sub.age} · Born {sub.birthday}</div>
+            {sub.address && <div className="text-muted">နေရပ် — {sub.address}</div>}
           </div>
 
           <SectionLabel className="mt-5">About</SectionLabel>
           <p className="mt-2 text-sm leading-relaxed">{sub.aboutYourself}</p>
+
+          {sub.lifeGoal && (
+            <>
+              <SectionLabel className="mt-5">ဘဝရည်မှန်းချက်</SectionLabel>
+              <p className="mt-2 text-sm leading-relaxed">{sub.lifeGoal}</p>
+            </>
+          )}
+
+          {sub.admiredArtist && (
+            <>
+              <SectionLabel className="mt-5">အားကျသော အနုပညာရှင်</SectionLabel>
+              <p className="mt-2 text-sm leading-relaxed">{sub.admiredArtist}</p>
+            </>
+          )}
 
           <SectionLabel className="mt-5">Contact</SectionLabel>
           <div className="mt-2 flex flex-col gap-1 text-sm">
             <a href={sub.facebookLink} target="_blank" rel="noreferrer" className="gf-link">
               {sub.facebookLink}
             </a>
-            <span>{sub.viberNo}</span>
+            {sub.phoneNo && <span>Phone — {sub.phoneNo}</span>}
+            <span>Viber — {sub.viberNo}</span>
           </div>
 
           <SectionLabel className="mt-5">Statement</SectionLabel>

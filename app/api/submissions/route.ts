@@ -45,6 +45,15 @@ export async function POST(request: Request) {
   if (typeof body.name !== "string" || body.name.trim().length < 2) {
     errors.push("Name အပြည့်အစုံ ထည့်ပါ။");
   }
+  if (typeof body.fatherName !== "string" || body.fatherName.trim().length < 1) {
+    errors.push("အဖေနာမည် ထည့်ပါ။");
+  }
+  if (typeof body.motherName !== "string" || body.motherName.trim().length < 1) {
+    errors.push("အမေနာမည် ထည့်ပါ။");
+  }
+  if (typeof body.stageName !== "string" || body.stageName.trim().length < 1) {
+    errors.push("အနုပညာ လုပ်ရှားမှု အမည် ထည့်ပါ။");
+  }
   const ageNum = Number(body.age);
   if (!Number.isFinite(ageNum) || ageNum < 10 || ageNum > 99) {
     errors.push("Age (10–99) မှန်ကန်စွာ ထည့်ပါ။");
@@ -57,14 +66,26 @@ export async function POST(request: Request) {
       errors.push("Birthday မှန်ကန်စွာ ထည့်ပါ။");
     }
   }
+  if (typeof body.address !== "string" || body.address.trim().length < 2) {
+    errors.push("နေရပ်လိပ်စာ ထည့်ပါ။");
+  }
   if (typeof body.aboutYourself !== "string" || body.aboutYourself.trim().length < 10) {
     errors.push("About yourself စာပိုဒ်တို ထည့်ပါ။");
   }
   if (typeof body.facebookLink !== "string" || !/^https?:\/\//i.test(body.facebookLink)) {
     errors.push("Facebook link မှန်ကန်စွာ ထည့်ပါ။");
   }
+  if (typeof body.phoneNo !== "string" || body.phoneNo.trim().length < 5) {
+    errors.push("ဆက်သွယ်ရန် ဖုန်းနံပါတ် ထည့်ပါ။");
+  }
   if (typeof body.viberNo !== "string" || body.viberNo.trim().length < 5) {
     errors.push("Viber number ထည့်ပါ။");
+  }
+  if (typeof body.lifeGoal !== "string" || body.lifeGoal.trim().length < 2) {
+    errors.push("သင့်ဘဝရည်မှန်းချက် ထည့်ပါ။");
+  }
+  if (typeof body.admiredArtist !== "string" || body.admiredArtist.trim().length < 1) {
+    errors.push("အားကျသော အနုပညာရှင်အမည် ထည့်ပါ။");
   }
   if (!isS3Key(body.nrcFront) || !isS3Key(body.nrcBack)) {
     errors.push("မှတ်ပုံတင် ရှေ့+နောက် ပုံ ၂ ပုံ တင်ပါ။");
@@ -96,11 +117,18 @@ export async function POST(request: Request) {
 
   const created = await createSubmission({
     name: body.name!.trim(),
+    fatherName: body.fatherName!.trim(),
+    motherName: body.motherName!.trim(),
+    stageName: body.stageName!.trim(),
     age: ageNum,
     birthday: body.birthday!,
+    address: body.address!.trim(),
     aboutYourself: body.aboutYourself!.trim(),
     facebookLink: body.facebookLink!,
+    phoneNo: body.phoneNo!.trim(),
     viberNo: body.viberNo!.trim(),
+    lifeGoal: body.lifeGoal!.trim(),
+    admiredArtist: body.admiredArtist!.trim(),
     nrcFront: body.nrcFront!,
     nrcBack: body.nrcBack!,
     portraits: body.portraits as string[],

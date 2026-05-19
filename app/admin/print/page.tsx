@@ -59,6 +59,7 @@ function TalentPage({ sub }: { sub: Submission }) {
         <div>
           <div className="mag-bar-name">{sub.name}</div>
           <div className="mag-bar-meta">
+            {sub.stageName ? <><span>Stage {sub.stageName}</span><span>·</span></> : null}
             <span>Age {sub.age}</span>
             <span>·</span>
             <span>Born {sub.birthday}</span>
@@ -70,10 +71,38 @@ function TalentPage({ sub }: { sub: Submission }) {
       </header>
 
       <div className="mag-text">
+        {(sub.fatherName || sub.motherName) && (
+          <div className="mag-section">
+            <h3 className="mag-h3">Parents</h3>
+            <p className="mag-p">
+              {sub.fatherName ? `အဖေ — ${sub.fatherName}` : ""}
+              {sub.fatherName && sub.motherName ? " · " : ""}
+              {sub.motherName ? `အမေ — ${sub.motherName}` : ""}
+            </p>
+          </div>
+        )}
+        {sub.address && (
+          <div className="mag-section">
+            <h3 className="mag-h3">နေရပ်လိပ်စာ</h3>
+            <p className="mag-p">{sub.address}</p>
+          </div>
+        )}
         <div className="mag-section">
           <h3 className="mag-h3">About</h3>
           <p className="mag-p">{sub.aboutYourself}</p>
         </div>
+        {sub.lifeGoal && (
+          <div className="mag-section">
+            <h3 className="mag-h3">ဘဝရည်မှန်းချက်</h3>
+            <p className="mag-p">{sub.lifeGoal}</p>
+          </div>
+        )}
+        {sub.admiredArtist && (
+          <div className="mag-section">
+            <h3 className="mag-h3">အားကျသော အနုပညာရှင်</h3>
+            <p className="mag-p">{sub.admiredArtist}</p>
+          </div>
+        )}
         <div className="mag-section">
           <h3 className="mag-h3">Artist Statement</h3>
           <p className="mag-p">{sub.artStatement}</p>
@@ -81,6 +110,8 @@ function TalentPage({ sub }: { sub: Submission }) {
         <div className="mag-section">
           <h3 className="mag-h3">Contact</h3>
           <p className="mag-p mag-mono">{sub.facebookLink}</p>
+          {sub.phoneNo && <p className="mag-p">Phone — {sub.phoneNo}</p>}
+          <p className="mag-p">Viber — {sub.viberNo}</p>
         </div>
         {sub.experience.length > 0 && (
           <div className="mag-section">

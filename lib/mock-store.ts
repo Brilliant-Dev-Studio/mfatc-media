@@ -7,11 +7,18 @@ type Row = {
   id: string;
   created_at: string | Date;
   name: string;
+  father_name: string;
+  mother_name: string;
+  stage_name: string;
   age: number;
   birthday: string | Date;
+  address: string;
   about_yourself: string;
   facebook_link: string;
+  phone_no: string;
   viber_no: string;
+  life_goal: string;
+  admired_artist: string;
   nrc_front: string;
   nrc_back: string;
   portraits: string[];
@@ -34,11 +41,18 @@ function rowToSubmission(r: Row): Submission {
     id: r.id,
     createdAt: new Date(r.created_at).toISOString(),
     name: r.name,
+    fatherName: r.father_name ?? "",
+    motherName: r.mother_name ?? "",
+    stageName: r.stage_name ?? "",
     age: r.age,
     birthday: toIsoDate(r.birthday),
+    address: r.address ?? "",
     aboutYourself: r.about_yourself,
     facebookLink: r.facebook_link,
+    phoneNo: r.phone_no ?? "",
     viberNo: r.viber_no,
+    lifeGoal: r.life_goal ?? "",
+    admiredArtist: r.admired_artist ?? "",
     nrcFront: r.nrc_front,
     nrcBack: r.nrc_back,
     portraits: r.portraits,
@@ -180,11 +194,16 @@ export async function createSubmission(input: SubmissionInput): Promise<Submissi
 
   const rows = (await sql`
     INSERT INTO submissions (
-      id, name, age, birthday, about_yourself, facebook_link, viber_no,
+      id, name, father_name, mother_name, stage_name,
+      age, birthday, address, about_yourself, facebook_link,
+      phone_no, viber_no, life_goal, admired_artist,
       nrc_front, nrc_back, portraits, art_statement, experience
     ) VALUES (
-      ${id}, ${input.name}, ${input.age}, ${input.birthday}, ${input.aboutYourself},
-      ${input.facebookLink}, ${input.viberNo}, ${input.nrcFront}, ${input.nrcBack},
+      ${id}, ${input.name}, ${input.fatherName}, ${input.motherName}, ${input.stageName},
+      ${input.age}, ${input.birthday}, ${input.address}, ${input.aboutYourself},
+      ${input.facebookLink}, ${input.phoneNo}, ${input.viberNo},
+      ${input.lifeGoal}, ${input.admiredArtist},
+      ${input.nrcFront}, ${input.nrcBack},
       ${portraitsJson}::jsonb, ${input.artStatement}, ${experienceJson}::jsonb
     )
     RETURNING *

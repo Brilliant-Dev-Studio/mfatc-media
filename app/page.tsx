@@ -17,11 +17,18 @@ const EMPTY_EXP: ExperienceEntry = { title: "", organization: "", period: "", de
 
 export default function FormPage() {
   const [name, setName] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [motherName, setMotherName] = useState("");
+  const [stageName, setStageName] = useState("");
   const [age, setAge] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [address, setAddress] = useState("");
   const [aboutYourself, setAboutYourself] = useState("");
   const [facebookLink, setFacebookLink] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
   const [viberNo, setViberNo] = useState("");
+  const [lifeGoal, setLifeGoal] = useState("");
+  const [admiredArtist, setAdmiredArtist] = useState("");
   const [nrcFront, setNrcFront] = useState<PhotoState>(null);
   const [nrcBack, setNrcBack] = useState<PhotoState>(null);
   const [portraits, setPortraits] = useState<PhotoState[]>([null, null, null, null]);
@@ -80,11 +87,18 @@ export default function FormPage() {
 
   function resetForm() {
     setName("");
+    setFatherName("");
+    setMotherName("");
+    setStageName("");
     setAge("");
     setBirthday("");
+    setAddress("");
     setAboutYourself("");
     setFacebookLink("");
+    setPhoneNo("");
     setViberNo("");
+    setLifeGoal("");
+    setAdmiredArtist("");
     setNrcFront((prev) => { revokePreview(prev); return null; });
     setNrcBack((prev) => { revokePreview(prev); return null; });
     setPortraits((prev) => { prev.forEach(revokePreview); return [null, null, null, null]; });
@@ -110,11 +124,18 @@ export default function FormPage() {
     setBusy(true);
     const payload = {
       name: name.trim(),
+      fatherName: fatherName.trim(),
+      motherName: motherName.trim(),
+      stageName: stageName.trim(),
       age: Number(age),
       birthday,
+      address: address.trim(),
       aboutYourself: aboutYourself.trim(),
       facebookLink: facebookLink.trim(),
+      phoneNo: phoneNo.trim(),
       viberNo: viberNo.trim(),
+      lifeGoal: lifeGoal.trim(),
+      admiredArtist: admiredArtist.trim(),
       nrcFront: nrcFrontKey,
       nrcBack: nrcBackKey,
       portraits: portraitKeys as string[],
@@ -241,6 +262,39 @@ export default function FormPage() {
           />
         </Question>
 
+        <Question label="အဖေနာမည်" required>
+          <input
+            type="text"
+            required
+            placeholder="ဥပမာ — ဦးအောင်"
+            value={fatherName}
+            onChange={(e) => setFatherName(e.target.value)}
+            className="gf-input"
+          />
+        </Question>
+
+        <Question label="အမေနာမည်" required>
+          <input
+            type="text"
+            required
+            placeholder="ဥပမာ — ဒေါ်မြ"
+            value={motherName}
+            onChange={(e) => setMotherName(e.target.value)}
+            className="gf-input"
+          />
+        </Question>
+
+        <Question label="အနုပညာ လုပ်ရှားမှု အမည် (Stage name)" required>
+          <input
+            type="text"
+            required
+            placeholder="ဥပမာ — Aye Aye"
+            value={stageName}
+            onChange={(e) => setStageName(e.target.value)}
+            className="gf-input"
+          />
+        </Question>
+
         <Question label="Age နဲ့ Birthday" required helper="Age က ၁၀–၉၉ ထဲက ဖြစ်ရမယ်။">
           <div className="grid grid-cols-2 gap-4">
             <label className="flex flex-col">
@@ -271,6 +325,17 @@ export default function FormPage() {
           </div>
         </Question>
 
+        <Question label="နေရပ်လိပ်စာ" required>
+          <textarea
+            required
+            rows={2}
+            placeholder="အိမ်အမှတ်၊ လမ်း၊ ရပ်ကွက်၊ မြို့နယ်၊ မြို့"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="gf-textarea"
+          />
+        </Question>
+
         <Question label="About yourself" required helper="သင်ဘယ်သူဖြစ်လဲ၊ ဘယ်က၊ ဘာတွေ ဖြစ်ချင်လဲ။">
           <textarea
             required
@@ -279,30 +344,6 @@ export default function FormPage() {
             value={aboutYourself}
             onChange={(e) => setAboutYourself(e.target.value)}
             className="gf-textarea"
-          />
-        </Question>
-
-        <Question label="Facebook profile link" required>
-          <input
-            type="url"
-            required
-            inputMode="url"
-            placeholder="https://facebook.com/your.name"
-            value={facebookLink}
-            onChange={(e) => setFacebookLink(e.target.value)}
-            className="gf-input"
-          />
-        </Question>
-
-        <Question label="Viber number" required helper="Country code နဲ့ ထည့်ပါ — e.g. +95 9...">
-          <input
-            type="tel"
-            required
-            inputMode="tel"
-            placeholder="+95 9..."
-            value={viberNo}
-            onChange={(e) => setViberNo(e.target.value)}
-            className="gf-input"
           />
         </Question>
 
@@ -335,6 +376,64 @@ export default function FormPage() {
               />
             ))}
           </div>
+        </Question>
+
+        <Question label="Facebook profile link" required>
+          <input
+            type="url"
+            required
+            inputMode="url"
+            placeholder="https://facebook.com/your.name"
+            value={facebookLink}
+            onChange={(e) => setFacebookLink(e.target.value)}
+            className="gf-input"
+          />
+        </Question>
+
+        <Question label="ဆက်သွယ်ရန် ဖုန်းနံပါတ်" required helper="Country code နဲ့ ထည့်ပါ — e.g. +95 9...">
+          <input
+            type="tel"
+            required
+            inputMode="tel"
+            placeholder="+95 9..."
+            value={phoneNo}
+            onChange={(e) => setPhoneNo(e.target.value)}
+            className="gf-input"
+          />
+        </Question>
+
+        <Question label="Viber number" required helper="Country code နဲ့ ထည့်ပါ — e.g. +95 9...">
+          <input
+            type="tel"
+            required
+            inputMode="tel"
+            placeholder="+95 9..."
+            value={viberNo}
+            onChange={(e) => setViberNo(e.target.value)}
+            className="gf-input"
+          />
+        </Question>
+
+        <Question label="သင့်ဘဝရည်မှန်းချက်" required>
+          <textarea
+            required
+            rows={3}
+            placeholder="သင်ဘယ်လို ဖြစ်ချင်လဲ၊ ဘယ်လို ရည်ရွယ်ချက် ရှိလဲ"
+            value={lifeGoal}
+            onChange={(e) => setLifeGoal(e.target.value)}
+            className="gf-textarea"
+          />
+        </Question>
+
+        <Question label="သင်အားကျလေးစားရသော အနုပညာရှင်အမည်" required>
+          <input
+            type="text"
+            required
+            placeholder="ဥပမာ — ..."
+            value={admiredArtist}
+            onChange={(e) => setAdmiredArtist(e.target.value)}
+            className="gf-input"
+          />
         </Question>
 
         <Question label="အနုပညာ လုပ်ဆောင်ချက် — short statement" required>

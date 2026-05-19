@@ -9,11 +9,18 @@ export type Submission = {
   id: string;
   createdAt: string;
   name: string;
+  fatherName: string;
+  motherName: string;
+  stageName: string;
   age: number;
   birthday: string;
+  address: string;
   aboutYourself: string;
   facebookLink: string;
+  phoneNo: string;
   viberNo: string;
+  lifeGoal: string;
+  admiredArtist: string;
   nrcFront: string;
   nrcBack: string;
   portraits: string[];

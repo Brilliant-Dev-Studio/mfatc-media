@@ -17,6 +17,9 @@ export function ensureSchema(): Promise<void> {
           id              TEXT PRIMARY KEY,
           created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
           name            TEXT NOT NULL,
+          father_name     TEXT NOT NULL DEFAULT '',
+          mother_name     TEXT NOT NULL DEFAULT '',
+          stage_name      TEXT NOT NULL DEFAULT '',
           age             INTEGER NOT NULL,
           birthday        DATE NOT NULL,
           about_yourself  TEXT NOT NULL,
@@ -29,6 +32,13 @@ export function ensureSchema(): Promise<void> {
           experience      JSONB NOT NULL
         )
       `;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS father_name TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS mother_name TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS stage_name TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS address TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS phone_no TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS life_goal TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS admired_artist TEXT NOT NULL DEFAULT ''`;
       await sql`CREATE INDEX IF NOT EXISTS submissions_created_at_idx ON submissions (created_at DESC)`;
     })().catch((e) => {
       ensured = null;
