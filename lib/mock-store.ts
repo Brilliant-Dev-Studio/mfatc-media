@@ -1,133 +1,177 @@
-import type { Submission, SubmissionInput } from "./types";
-
-type Store = { v: number; byId: Map<string, Submission>; ordered: string[] };
-
-const SEED_VERSION = 3;
-
-const g = globalThis as unknown as { __mfatcStore?: Store };
-function getStore(): Store {
-  if (!g.__mfatcStore || g.__mfatcStore.v !== SEED_VERSION) {
-    g.__mfatcStore = { v: SEED_VERSION, byId: new Map(), ordered: [] };
-    seed(g.__mfatcStore);
-  }
-  return g.__mfatcStore;
-}
-
-function seedKey(idx: number, slot: string): string {
-  // S3-style key for seed entries; matches the regex enforced server-side.
-  // These objects do NOT exist in the bucket — signed GETs will 403 in the
-  // admin UI for seed rows. Real submissions upload their own keys.
-  return `submissions/seed-${String(idx).padStart(3, "0")}/${slot}.jpg`;
-}
-
-const FIRST_NAMES = ["Aye", "Hnin", "Khin", "May", "Nan", "Phyu", "Su", "Thiri", "Wai", "Yamin", "Zin", "Nora", "Lin", "Hsu", "Ei", "Cho", "Kay", "Pwint"];
-const LAST_NAMES = ["Aung", "Min", "Hlaing", "Phyo", "Soe", "Win", "Htut", "Naing", "Zaw", "Oo", "Kyaw", "Tun", "Maung", "Latt", "Khant"];
-const PHRASES = [
-  "သီချင်းတေးရေး၊ ပန်းချီနဲ့ မိမိရဲ့ ခံစားချက်ကို ဖော်ပြခြင်း။",
-  "Stage performance က ကျမအတွက် အသက်လေး။ Modern dance ကို ၃ နှစ်ကြာသင်ထားပါတယ်။",
-  "Photography နဲ့ short film တို့ကို သီးခြားအနေနဲ့ စိတ်ပါဝင်စားပါတယ်။",
-  "Acting workshop ၂ ခုတက်ပြီးပါပြီ၊ commercial shoot ၃ ခုလုပ်ဖူးပါတယ်။",
-  "Fashion modeling နဲ့ runway walk training အပြည့်ရှိပါတယ်။",
-  "MC, host, voice-over အလုပ်တွေကို တာဝန်ယူဖူးပါတယ်။",
-  "Make-up artistry ကို professional level သင်ထားပြီးပါပြီ။",
-  "ပိုစတာ၊ digital painting နဲ့ tattoo design တွေ လုပ်ဖူးပါတယ်။",
-];
-
-function seed(store: Store) {
-  const now = Date.now();
-  for (let i = 0; i < 32; i++) {
-    const first = FIRST_NAMES[i % FIRST_NAMES.length];
-    const last = LAST_NAMES[(i * 3) % LAST_NAMES.length];
-    const name = `${first} ${last}`;
-    const id = `sub_${(now - i * 86_400_000).toString(36)}_${i}`;
-    const age = 19 + (i % 18);
-    const birthYear = new Date().getFullYear() - age;
-    const birthMonth = String(1 + (i % 12)).padStart(2, "0");
-    const birthDay = String(1 + (i % 28)).padStart(2, "0");
-    const sub: Submission = {
-      id,
-      createdAt: new Date(now - i * 86_400_000 - i * 3_600_000).toISOString(),
-      name,
-      age,
-      birthday: `${birthYear}-${birthMonth}-${birthDay}`,
-      aboutYourself: `${first} လို့ခေါ်ပါတယ်။ Yangon မှာ နေပါတယ်။ ${age} နှစ်ပါ။ ${i % 2 === 0 ? "Performing arts ကို လေ့လာဖူးတယ်။" : "Visual arts ဘက်က ပိုစိတ်ဝင်စားတယ်။"} ${PHRASES[(i + 2) % PHRASES.length]}`,
-      facebookLink: `https://facebook.com/${first.toLowerCase()}.${last.toLowerCase()}.${i}`,
-      viberNo: `+9597${(100000 + i * 1234).toString().slice(0, 7)}`,
-      nrcFront: seedKey(i, "nrc-front"),
-      nrcBack: seedKey(i, "nrc-back"),
-      portraits: [
-        seedKey(i, "portrait-1"),
-        seedKey(i, "portrait-2"),
-        seedKey(i, "portrait-3"),
-        seedKey(i, "portrait-4"),
-      ],
-      artStatement: PHRASES[i % PHRASES.length],
-      experience: [
-        {
-          title: i % 2 === 0 ? "Lead Dancer" : "Featured Model",
-          organization: i % 2 === 0 ? "Yangon Stage Collective" : "Mandalay Fashion Week",
-          period: `202${3 - (i % 3)} — 202${4 - (i % 2)}`,
-          description: "Live shows, brand collaborations, editorial shoots ပါဝင်ခဲ့သည်။",
-        },
-        ...(i % 3 === 0
-          ? [
-              {
-                title: "Workshop Attendee",
-                organization: "Open Studio MM",
-                period: "2024",
-                description: "Acting + improv ၈ ပတ်စာ workshop။",
-              },
-            ]
-          : []),
-      ],
-    };
-    store.byId.set(id, sub);
-    store.ordered.push(id);
-  }
-}
+import { ensureSchema, sql } from "./db";
+import type { ExperienceEntry, Submission, SubmissionInput } from "./types";
 
 export type ListField = "all" | "name" | "facebook" | "viber" | "art";
 
-export function listSubmissions(opts: {
+type Row = {
+  id: string;
+  created_at: string | Date;
+  name: string;
+  age: number;
+  birthday: string | Date;
+  about_yourself: string;
+  facebook_link: string;
+  viber_no: string;
+  nrc_front: string;
+  nrc_back: string;
+  portraits: string[];
+  art_statement: string;
+  experience: ExperienceEntry[];
+};
+
+function toIsoDate(v: string | Date): string {
+  if (v instanceof Date) {
+    const y = v.getUTCFullYear();
+    const m = String(v.getUTCMonth() + 1).padStart(2, "0");
+    const d = String(v.getUTCDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+  return v.slice(0, 10);
+}
+
+function rowToSubmission(r: Row): Submission {
+  return {
+    id: r.id,
+    createdAt: new Date(r.created_at).toISOString(),
+    name: r.name,
+    age: r.age,
+    birthday: toIsoDate(r.birthday),
+    aboutYourself: r.about_yourself,
+    facebookLink: r.facebook_link,
+    viberNo: r.viber_no,
+    nrcFront: r.nrc_front,
+    nrcBack: r.nrc_back,
+    portraits: r.portraits,
+    artStatement: r.art_statement,
+    experience: r.experience,
+  };
+}
+
+async function searchRows(
+  field: ListField,
+  pattern: string,
+  pageSize: number,
+  offset: number,
+): Promise<{ items: Row[]; total: number }> {
+  switch (field) {
+    case "name": {
+      const items = (await sql`
+        SELECT * FROM submissions WHERE LOWER(name) LIKE ${pattern}
+        ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}
+      `) as Row[];
+      const t = (await sql`
+        SELECT COUNT(*)::text AS count FROM submissions WHERE LOWER(name) LIKE ${pattern}
+      `) as { count: string }[];
+      return { items, total: Number(t[0]?.count ?? 0) };
+    }
+    case "facebook": {
+      const items = (await sql`
+        SELECT * FROM submissions WHERE LOWER(facebook_link) LIKE ${pattern}
+        ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}
+      `) as Row[];
+      const t = (await sql`
+        SELECT COUNT(*)::text AS count FROM submissions WHERE LOWER(facebook_link) LIKE ${pattern}
+      `) as { count: string }[];
+      return { items, total: Number(t[0]?.count ?? 0) };
+    }
+    case "viber": {
+      const items = (await sql`
+        SELECT * FROM submissions WHERE LOWER(viber_no) LIKE ${pattern}
+        ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}
+      `) as Row[];
+      const t = (await sql`
+        SELECT COUNT(*)::text AS count FROM submissions WHERE LOWER(viber_no) LIKE ${pattern}
+      `) as { count: string }[];
+      return { items, total: Number(t[0]?.count ?? 0) };
+    }
+    case "art": {
+      const items = (await sql`
+        SELECT * FROM submissions
+        WHERE LOWER(art_statement || ' ' || about_yourself) LIKE ${pattern}
+        ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}
+      `) as Row[];
+      const t = (await sql`
+        SELECT COUNT(*)::text AS count FROM submissions
+        WHERE LOWER(art_statement || ' ' || about_yourself) LIKE ${pattern}
+      `) as { count: string }[];
+      return { items, total: Number(t[0]?.count ?? 0) };
+    }
+    case "all":
+    default: {
+      const items = (await sql`
+        SELECT * FROM submissions
+        WHERE LOWER(name || ' ' || facebook_link || ' ' || viber_no || ' ' || art_statement || ' ' || about_yourself || ' ' || id) LIKE ${pattern}
+        ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}
+      `) as Row[];
+      const t = (await sql`
+        SELECT COUNT(*)::text AS count FROM submissions
+        WHERE LOWER(name || ' ' || facebook_link || ' ' || viber_no || ' ' || art_statement || ' ' || about_yourself || ' ' || id) LIKE ${pattern}
+      `) as { count: string }[];
+      return { items, total: Number(t[0]?.count ?? 0) };
+    }
+  }
+}
+
+export async function listSubmissions(opts: {
   page?: number;
   pageSize?: number;
   q?: string;
   field?: ListField;
 }) {
-  const store = getStore();
+  await ensureSchema();
+
   const page = Math.max(1, opts.page ?? 1);
   const pageSize = Math.min(50, Math.max(1, opts.pageSize ?? 10));
-  const q = (opts.q ?? "").trim().toLowerCase();
+  const q = (opts.q ?? "").trim();
   const field = opts.field ?? "all";
+  const offset = (page - 1) * pageSize;
 
-  const filtered = store.ordered
-    .map((id) => store.byId.get(id)!)
-    .filter((s) => {
-      if (!q) return true;
-      const haystack =
-        field === "name"
-          ? s.name
-          : field === "facebook"
-            ? s.facebookLink
-            : field === "viber"
-              ? s.viberNo
-              : field === "art"
-                ? `${s.artStatement} ${s.aboutYourself}`
-                : `${s.name} ${s.facebookLink} ${s.viberNo} ${s.artStatement} ${s.aboutYourself} ${s.id}`;
-      return haystack.toLowerCase().includes(q);
-    });
+  let items: Row[];
+  let total: number;
 
-  const total = filtered.length;
+  if (q) {
+    const pattern = `%${q.toLowerCase()}%`;
+    const r = await searchRows(field, pattern, pageSize, offset);
+    items = r.items;
+    total = r.total;
+  } else {
+    items = (await sql`
+      SELECT * FROM submissions ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}
+    `) as Row[];
+    const t = (await sql`SELECT COUNT(*)::text AS count FROM submissions`) as {
+      count: string;
+    }[];
+    total = Number(t[0]?.count ?? 0);
+  }
+
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
-  const items = filtered.slice((page - 1) * pageSize, page * pageSize);
-  return { items, total, page, pageSize, pageCount };
+  return {
+    items: items.map(rowToSubmission),
+    total,
+    page,
+    pageSize,
+    pageCount,
+  };
 }
 
-export function createSubmission(input: SubmissionInput): Submission {
-  const store = getStore();
+export async function createSubmission(input: SubmissionInput): Promise<Submission> {
+  await ensureSchema();
+
   const id = `sub_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
-  const sub: Submission = { id, createdAt: new Date().toISOString(), ...input };
-  store.byId.set(id, sub);
-  store.ordered.unshift(id);
-  return sub;
+  const portraitsJson = JSON.stringify(input.portraits);
+  const experienceJson = JSON.stringify(input.experience);
+
+  const rows = (await sql`
+    INSERT INTO submissions (
+      id, name, age, birthday, about_yourself, facebook_link, viber_no,
+      nrc_front, nrc_back, portraits, art_statement, experience
+    ) VALUES (
+      ${id}, ${input.name}, ${input.age}, ${input.birthday}, ${input.aboutYourself},
+      ${input.facebookLink}, ${input.viberNo}, ${input.nrcFront}, ${input.nrcBack},
+      ${portraitsJson}::jsonb, ${input.artStatement}, ${experienceJson}::jsonb
+    )
+    RETURNING *
+  `) as Row[];
+
+  return rowToSubmission(rows[0]);
 }

@@ -28,7 +28,7 @@ export default async function PrintPage({
   const q = sp.q ?? "";
   const field = (sp.field as "all" | "facebook" | "viber" | "art") ?? "all";
 
-  const data = listSubmissions({ page, pageSize, q, field });
+  const data = await listSubmissions({ page, pageSize, q, field });
   const items: Submission[] = s3Configured()
     ? await Promise.all(
         data.items.map(async (s) => ({
@@ -39,102 +39,85 @@ export default async function PrintPage({
         })),
       )
     : data.items;
-  const generatedAt = new Date();
-
-  const filterSummary =
-    q.trim().length > 0 ? `“${q}” in ${field}` : "no filter";
 
   return (
-    <div className="print-root">
+    <div className="mag-root">
       <AutoPrint />
-      <header className="print-header">
-        <div>
-          <div className="print-brand">MFATC — Submissions Export</div>
-          <div className="print-meta">
-            Page {data.page} of {data.pageCount} · {data.items.length} item(s) on this page · {data.total} total · {filterSummary}
-          </div>
-        </div>
-        <div className="print-meta">
-          {generatedAt.toLocaleString()} · by {admin.username}
-        </div>
-      </header>
-
       {items.length === 0 ? (
         <div className="print-empty">No submissions match the current filter.</div>
       ) : (
-        items.map((s) => <SubmissionBlock key={s.id} sub={s} />)
+        items.map((s) => <TalentPage key={s.id} sub={s} />)
       )}
     </div>
   );
 }
 
-function SubmissionBlock({ sub }: { sub: Submission }) {
-  const created = new Date(sub.createdAt);
+function TalentPage({ sub }: { sub: Submission }) {
   return (
-    <article className="print-sub">
-      <div className="print-sub-head">
-        <span className="print-sub-id">{sub.id}</span>
-        <span>{created.toLocaleString()}</span>
-      </div>
-      <div className="print-grid">
+    <section className="mag-page">
+      <header className="mag-bar">
         <div>
-          <h3>Personal</h3>
-          <p>
-            <strong>{sub.name}</strong> · Age {sub.age} · Born {sub.birthday}
-          </p>
-
-          <h3>About</h3>
-          <p>{sub.aboutYourself}</p>
-
-          <h3>Contact</h3>
-          <p>
-            <strong>Facebook: </strong>
-            {sub.facebookLink}
-          </p>
-          <p>
-            <strong>Viber: </strong>
-            {sub.viberNo}
-          </p>
-
-          <h3>Statement</h3>
-          <p>{sub.artStatement}</p>
-
-          {sub.experience.length > 0 && (
-            <>
-              <h3>Experience</h3>
-              <ul>
-                {sub.experience.map((e, i) => (
-                  <li key={i}>
-                    <strong>{e.title || "—"}</strong>
-                    {e.organization ? ` · ${e.organization}` : ""}
-                    {e.period ? ` · ${e.period}` : ""}
-                    {e.description && (
-                      <div className="print-exp-desc">{e.description}</div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-        <div>
-          <h3>NRC</h3>
-          <div className="print-photos print-photos-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={sub.nrcFront} alt="NRC front" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={sub.nrcBack} alt="NRC back" />
-          </div>
-
-          <h3>Portraits</h3>
-          <div className="print-photos print-photos-4">
-            {sub.portraits.map((p, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={p} alt={`Portrait ${i + 1}`} />
-            ))}
+          <div className="mag-bar-name">{sub.name}</div>
+          <div className="mag-bar-meta">
+            <span>Age {sub.age}</span>
+            <span>·</span>
+            <span>Born {sub.birthday}</span>
+            <span>·</span>
+            <span>Viber {sub.viberNo}</span>
           </div>
         </div>
+        <div className="mag-bar-id">{sub.id}</div>
+      </header>
+
+      <div className="mag-text">
+        <div className="mag-section">
+          <h3 className="mag-h3">About</h3>
+          <p className="mag-p">{sub.aboutYourself}</p>
+        </div>
+        <div className="mag-section">
+          <h3 className="mag-h3">Artist Statement</h3>
+          <p className="mag-p">{sub.artStatement}</p>
+        </div>
+        <div className="mag-section">
+          <h3 className="mag-h3">Contact</h3>
+          <p className="mag-p mag-mono">{sub.facebookLink}</p>
+        </div>
+        {sub.experience.length > 0 && (
+          <div className="mag-section">
+            <h3 className="mag-h3">Experience</h3>
+            <ul className="mag-exp">
+              {sub.experience.map((e, i) => (
+                <li key={i}>
+                  <span className="mag-exp-title">{e.title || "—"}</span>
+                  {e.organization ? <> · {e.organization}</> : null}
+                  {e.period ? <span className="mag-exp-period"> · {e.period}</span> : null}
+                  {e.description && <div className="mag-exp-desc">{e.description}</div>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
-    </article>
+
+      <section className="mag-photo-section">
+        <h3 className="mag-h3">Portraits</h3>
+        <div className="mag-row mag-row-4">
+          {sub.portraits.map((p, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={i} src={p} alt={`${sub.name} — portrait ${i + 1}`} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mag-photo-section">
+        <h3 className="mag-h3">NRC</h3>
+        <div className="mag-row mag-row-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={sub.nrcFront} alt="NRC front" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={sub.nrcBack} alt="NRC back" />
+        </div>
+      </section>
+    </section>
   );
 }

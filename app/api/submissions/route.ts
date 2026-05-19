@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   if (!admin) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const sp = request.nextUrl.searchParams;
-  const data = listSubmissions({
+  const data = await listSubmissions({
     page: Number(sp.get("page")) || 1,
     pageSize: Number(sp.get("pageSize")) || 10,
     q: sp.get("q") ?? "",
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const created = createSubmission({
+  const created = await createSubmission({
     name: body.name!.trim(),
     age: ageNum,
     birthday: body.birthday!,

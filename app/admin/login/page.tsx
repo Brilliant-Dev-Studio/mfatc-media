@@ -78,7 +78,6 @@ function AdminLoginForm() {
         <button type="submit" disabled={busy} className="gf-btn-primary">
           {busy ? "Signing in…" : "Sign in"}
         </button>
-        <span className="text-xs text-muted">admin / admin123</span>
       </div>
     </form>
   );

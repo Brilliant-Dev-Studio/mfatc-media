@@ -302,9 +302,9 @@ body {
 .print-sub-id { font-family: var(--font-mono), monospace; }
 
 .print-grid {
-  display: grid;
-  grid-template-columns: 1fr 200px;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .print-grid h3 {
   font-size: 9px;
@@ -320,27 +320,155 @@ body {
 .print-grid li { margin: 1px 0; }
 .print-exp-desc { color: #555; font-size: 10px; margin-top: 1px; }
 
-.print-photos { display: grid; gap: 3px; }
-.print-photos-2 { grid-template-columns: 1fr 1fr; }
-.print-photos-4 { grid-template-columns: repeat(4, 1fr); }
+.print-photos { display: flex; flex-wrap: wrap; gap: 6px; }
 .print-photos img {
-  width: 100%;
   object-fit: cover;
   border: 1px solid #ddd;
-  border-radius: 2px;
+  border-radius: 3px;
+  display: block;
 }
-.print-photos-2 img { aspect-ratio: 4 / 3; }
-.print-photos-4 img { aspect-ratio: 3 / 4; }
+.print-photos-2 img { height: 40mm; width: auto; max-width: 100%; }
+.print-photos-4 img { height: 50mm; width: auto; max-width: 100%; }
 
 .print-empty { padding: 18px; text-align: center; color: #555; font-size: 11px; }
 
+/* ──────────────── Photo-first print layout ──────────────── */
+
+.mag-root {
+  background: #f3f1ec;
+  min-height: 100vh;
+  padding: 16px 0;
+}
+
+.mag-page {
+  width: 210mm;
+  height: 297mm;
+  margin: 0 auto 18px;
+  background: #fff;
+  color: #111;
+  padding: 7mm;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  page-break-after: always;
+  break-after: page;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  gap: 3mm;
+}
+.mag-page:last-child { page-break-after: auto; break-after: auto; }
+
+.mag-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6mm;
+  padding: 0 1mm 2mm;
+  border-bottom: 1px solid #e3e0d8;
+  flex-shrink: 0;
+}
+.mag-bar-name {
+  font-size: 14pt;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.mag-bar-meta {
+  font-size: 7pt;
+  color: #555;
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-top: 1.2mm;
+}
+.mag-bar-id {
+  font-family: var(--font-mono), monospace;
+  font-size: 6.5pt;
+  color: #999;
+}
+
+.mag-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+  flex-shrink: 0;
+}
+.mag-section { min-width: 0; }
+.mag-h3 {
+  font-size: 5.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #888;
+  margin: 0 0 0.5mm;
+  font-weight: 600;
+}
+.mag-p {
+  font-size: 6.5pt;
+  line-height: 1.3;
+  margin: 0;
+  color: #1a1a1a;
+}
+.mag-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 6pt;
+  word-break: break-all;
+}
+.mag-exp { list-style: none; padding: 0; margin: 0; }
+.mag-exp li {
+  font-size: 6.5pt;
+  line-height: 1.3;
+  margin-bottom: 0.6mm;
+  color: #1a1a1a;
+}
+.mag-exp-title { font-weight: 600; }
+.mag-exp-period { color: #666; }
+.mag-exp-desc { color: #555; font-size: 6pt; margin-top: 0.2mm; }
+
+.mag-photo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1mm;
+  flex-shrink: 0;
+}
+.mag-row {
+  display: grid;
+  gap: 2mm;
+}
+
+.mag-row-4 { grid-template-columns: repeat(4, 1fr); }
+.mag-row-2 { grid-template-columns: repeat(2, 1fr); }
+.mag-row-4 img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border-radius: 2px;
+  background: #f3f1ec;
+}
+.mag-row-2 img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  border-radius: 2px;
+  background: #f3f1ec;
+  border: 1px solid #ddd;
+}
+
 @page {
   size: A4;
-  margin: 8mm;
+  margin: 0;
 }
 
 @media print {
   html, body { background: #fff !important; }
-  .print-root { padding: 0; max-width: 100%; }
+  .mag-root { padding: 0; background: #fff; }
+  .mag-page {
+    margin: 0;
+    box-shadow: none;
+    width: 210mm;
+    min-height: 297mm;
+  }
   .print-no-print { display: none !important; }
 }

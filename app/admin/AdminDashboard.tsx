@@ -103,6 +103,8 @@ export function AdminDashboard({ username }: { username: string }) {
           <span></span>
         </div>
         <ul>
+          {loading && items.length === 0 &&
+            Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
           {items.map((s) => (
             <Row
               key={s.id}
@@ -269,6 +271,30 @@ function Detail({ sub }: { sub: Submission }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function SkeletonRow() {
+  return (
+    <li className="border-b border-border last:border-b-0" aria-hidden>
+      <div className="grid w-full grid-cols-[1fr_40px] items-center gap-3 px-4 py-3 sm:grid-cols-[1fr_1.3fr_1.1fr_2fr_40px]">
+        <div className="flex flex-col gap-1.5">
+          <div className="h-3.5 w-24 animate-pulse rounded bg-black/10" />
+          <div className="h-3 w-32 animate-pulse rounded bg-black/10" />
+        </div>
+        <div className="hidden flex-col gap-1.5 sm:flex">
+          <div className="h-3.5 w-28 animate-pulse rounded bg-black/10" />
+          <div className="h-3 w-20 animate-pulse rounded bg-black/10" />
+        </div>
+        <div className="hidden sm:block">
+          <div className="h-3.5 w-28 animate-pulse rounded bg-black/10" />
+        </div>
+        <div className="hidden sm:block">
+          <div className="h-3.5 w-full animate-pulse rounded bg-black/10" />
+        </div>
+        <div className="h-3.5 w-3 animate-pulse rounded bg-black/10 justify-self-end" />
+      </div>
+    </li>
   );
 }
 

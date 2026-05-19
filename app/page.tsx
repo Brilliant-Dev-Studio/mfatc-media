@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Link from "next/link";
 import { fileToThumbnailBlob } from "@/lib/image";
 import type { ExperienceEntry } from "@/lib/types";
 
@@ -182,10 +181,7 @@ export default function FormPage() {
           </div>
         </div>
         <footer className="text-on-stage mt-4 px-2 text-center text-xs">
-          MFATC Studio · Yangon ·{" "}
-          <Link href="/admin/login" className="gf-link">
-            Admin
-          </Link>
+          MFATC Studio · Yangon
         </footer>
         </main>
       </div>
@@ -427,10 +423,7 @@ export default function FormPage() {
       </form>
 
       <footer className="text-on-stage mt-6 px-2 text-center text-xs">
-        MFATC Studio · Yangon ·{" "}
-        <Link href="/admin/login" className="gf-link">
-          Admin
-        </Link>
+        MFATC Studio · Yangon
       </footer>
       </main>
     </div>
