@@ -154,6 +154,23 @@ export async function listSubmissions(opts: {
   };
 }
 
+export async function deleteSubmission(id: string): Promise<boolean> {
+  await ensureSchema();
+  const rows = (await sql`
+    DELETE FROM submissions WHERE id = ${id} RETURNING id
+  `) as { id: string }[];
+  return rows.length > 0;
+}
+
+export async function deleteAllSubmissions(): Promise<number> {
+  await ensureSchema();
+  const rows = (await sql`
+    WITH deleted AS (DELETE FROM submissions RETURNING id)
+    SELECT COUNT(*)::text AS count FROM deleted
+  `) as { count: string }[];
+  return Number(rows[0]?.count ?? 0);
+}
+
 export async function createSubmission(input: SubmissionInput): Promise<Submission> {
   await ensureSchema();
 

@@ -15,6 +15,7 @@ export function AdminDashboard({ username }: { username: string }) {
   const [q, setQ] = useState("");
   const [field, setField] = useState<FieldKey>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -36,6 +37,26 @@ export function AdminDashboard({ username }: { username: string }) {
     const id = setTimeout(fetchData, q ? 220 : 0);
     return () => clearTimeout(id);
   }, [fetchData, q]);
+
+  const onDeleteAll = async () => {
+    if (total === 0) return;
+    const ok = window.confirm(
+      `Submissions ${total} ခုလုံးကို permanent ဖျက်ပါမည်။ ပြန် undo လို့ မရပါ။ ဆက်လုပ်မလား?`,
+    );
+    if (!ok) return;
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/submissions", { method: "DELETE" });
+      if (res.ok) {
+        setPage(1);
+        await fetchData();
+      } else {
+        window.alert("Delete failed");
+      }
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const onLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -84,22 +105,33 @@ export function AdminDashboard({ username }: { username: string }) {
         <span className="text-xs text-muted">
           ဒီစာမျက်နှာ data တွေကိုပဲ PDF အဖြစ် download ဆွဲမယ်
         </span>
-        <a
-          href={`/admin/print?${new URLSearchParams({ page: String(page), pageSize: "10", q, field }).toString()}`}
-          target="_blank"
-          rel="noreferrer"
-          className="gf-btn-outline inline-flex items-center"
-        >
-          Download PDF
-        </a>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onDeleteAll}
+            disabled={deleting || total === 0}
+            className="gf-btn-outline inline-flex items-center disabled:opacity-40"
+            style={{ borderColor: "var(--gf-required)", color: "var(--gf-required)" }}
+          >
+            {deleting ? "Deleting…" : "Delete All"}
+          </button>
+          <a
+            href={`/admin/print?${new URLSearchParams({ page: String(page), pageSize: "10", q, field }).toString()}`}
+            target="_blank"
+            rel="noreferrer"
+            className="gf-btn-outline inline-flex items-center"
+          >
+            Download PDF
+          </a>
+        </div>
       </div>
 
       <section className="mt-3 overflow-hidden rounded-md border border-border bg-white">
-        <div className="hidden grid-cols-[1fr_1.3fr_1.1fr_2fr_40px] gap-3 border-b border-border bg-surface-alt px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-muted sm:grid">
+        <div className="hidden grid-cols-[1fr_1.3fr_1.1fr_2fr_28px_28px] gap-3 border-b border-border bg-surface-alt px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-muted sm:grid">
           <span>Submitted</span>
           <span>Name</span>
           <span>Viber</span>
           <span>Statement</span>
+          <span></span>
           <span></span>
         </div>
         <ul>
@@ -111,6 +143,19 @@ export function AdminDashboard({ username }: { username: string }) {
               sub={s}
               open={expanded === s.id}
               onToggle={() => setExpanded((cur) => (cur === s.id ? null : s.id))}
+              onDelete={async () => {
+                const ok = window.confirm(
+                  `${s.name} (${s.id}) ကို permanent ဖျက်ပါမည်။ ပြန် undo လို့ မရပါ။ ဆက်လုပ်မလား?`,
+                );
+                if (!ok) return;
+                const res = await fetch(`/api/submissions/${s.id}`, { method: "DELETE" });
+                if (res.ok) {
+                  if (expanded === s.id) setExpanded(null);
+                  await fetchData();
+                } else {
+                  window.alert("Delete failed");
+                }
+              }}
             />
           ))}
           {!loading && items.length === 0 && (
@@ -174,26 +219,59 @@ function Filters({
   );
 }
 
-function Row({ sub, open, onToggle }: { sub: Submission; open: boolean; onToggle: () => void }) {
+function Row({
+  sub,
+  open,
+  onToggle,
+  onDelete,
+}: {
+  sub: Submission;
+  open: boolean;
+  onToggle: () => void;
+  onDelete: () => void;
+}) {
   const created = new Date(sub.createdAt);
   const dateLabel = `${created.getFullYear()}-${String(created.getMonth() + 1).padStart(2, "0")}-${String(created.getDate()).padStart(2, "0")}`;
+  const [busy, setBusy] = useState(false);
   return (
     <li className="border-b border-border last:border-b-0">
-      <button
-        onClick={onToggle}
-        className="grid w-full grid-cols-[1fr_40px] items-center gap-3 px-4 py-3 text-left transition hover:bg-(--gf-hover) sm:grid-cols-[1fr_1.3fr_1.1fr_2fr_40px]"
-      >
-        <div className="text-sm">
+      <div className="grid w-full grid-cols-[1fr_28px_28px] items-center gap-3 px-4 py-3 transition hover:bg-(--gf-hover) sm:grid-cols-[1fr_1.3fr_1.1fr_2fr_28px_28px]">
+        <button onClick={onToggle} className="text-left text-sm">
           <div className="text-foreground">{dateLabel}</div>
           <div className="text-xs text-muted">{sub.id}</div>
-        </div>
-        <div className="hidden truncate text-sm sm:block">
+        </button>
+        <button onClick={onToggle} className="hidden truncate text-left text-sm sm:block">
           <div>{sub.name}</div>
           <div className="text-xs text-muted">{sub.age} · {sub.birthday}</div>
-        </div>
-        <div className="hidden text-sm sm:block">{sub.viberNo}</div>
-        <div className="hidden truncate text-sm text-muted sm:block">{sub.artStatement}</div>
-        <div className="text-right text-muted">
+        </button>
+        <button onClick={onToggle} className="hidden text-left text-sm sm:block">
+          {sub.viberNo}
+        </button>
+        <button onClick={onToggle} className="hidden truncate text-left text-sm text-muted sm:block">
+          {sub.artStatement}
+        </button>
+        <button
+          onClick={async () => {
+            setBusy(true);
+            try {
+              await onDelete();
+            } finally {
+              setBusy(false);
+            }
+          }}
+          disabled={busy}
+          aria-label="Delete submission"
+          title="Delete"
+          className="text-base leading-none transition disabled:opacity-40"
+          style={{ color: "var(--gf-required)" }}
+        >
+          {busy ? "…" : "✕"}
+        </button>
+        <button
+          onClick={onToggle}
+          aria-label="Toggle details"
+          className="text-right text-muted"
+        >
           <span
             className="inline-block transition-transform"
             style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
@@ -201,8 +279,8 @@ function Row({ sub, open, onToggle }: { sub: Submission; open: boolean; onToggle
           >
             ⌄
           </span>
-        </div>
-      </button>
+        </button>
+      </div>
       {open && <Detail sub={sub} />}
     </li>
   );
@@ -277,7 +355,7 @@ function Detail({ sub }: { sub: Submission }) {
 function SkeletonRow() {
   return (
     <li className="border-b border-border last:border-b-0" aria-hidden>
-      <div className="grid w-full grid-cols-[1fr_40px] items-center gap-3 px-4 py-3 sm:grid-cols-[1fr_1.3fr_1.1fr_2fr_40px]">
+      <div className="grid w-full grid-cols-[1fr_28px_28px] items-center gap-3 px-4 py-3 sm:grid-cols-[1fr_1.3fr_1.1fr_2fr_28px_28px]">
         <div className="flex flex-col gap-1.5">
           <div className="h-3.5 w-24 animate-pulse rounded bg-black/10" />
           <div className="h-3 w-32 animate-pulse rounded bg-black/10" />
@@ -292,6 +370,7 @@ function SkeletonRow() {
         <div className="hidden sm:block">
           <div className="h-3.5 w-full animate-pulse rounded bg-black/10" />
         </div>
+        <div className="h-3.5 w-3 animate-pulse rounded bg-black/10 justify-self-end" />
         <div className="h-3.5 w-3 animate-pulse rounded bg-black/10 justify-self-end" />
       </div>
     </li>

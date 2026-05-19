@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { getCurrentAdmin } from "@/lib/auth";
-import { createSubmission, listSubmissions, type ListField } from "@/lib/mock-store";
+import { createSubmission, deleteAllSubmissions, listSubmissions, type ListField } from "@/lib/mock-store";
 import { objectExists, presignGet, s3Configured } from "@/lib/s3";
 import type { Submission, SubmissionInput } from "@/lib/types";
 
@@ -114,4 +114,12 @@ export async function POST(request: Request) {
   });
 
   return Response.json({ submission: created }, { status: 201 });
+}
+
+export async function DELETE() {
+  const admin = await getCurrentAdmin();
+  if (!admin) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const deleted = await deleteAllSubmissions();
+  return Response.json({ deleted });
 }
