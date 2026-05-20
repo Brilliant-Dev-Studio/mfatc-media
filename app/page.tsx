@@ -6,7 +6,7 @@ import { fileToThumbnailBlob } from "@/lib/image";
 import type { ExperienceEntry } from "@/lib/types";
 
 const STAGE_BG_BLUR =
-  "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABwBACdASoQABcAPxFwsFAsJiSisAgBgCIJbACdMoR3ACnKaVmqUXl0kEKkAAD94CMGWnjEyV69p11Buo4NejcUT4fD9z+wLaUPLTxlqnVDXcEFrBrG1lOyr4IdRVbt+ByrdoJ8je6zZQ3/ciakGJC6l4v4CggAAAA=";
+  "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoQAA0ABABoJbACdAENUuVkAAD+lgt9O3jRVAQM26/xZH/W3T+PdjsfTNc5rggA";
 
 const CURTAIN_LEFT_BLUR =
   "data:image/webp;base64,UklGRgQBAABXRUJQVlA4WAoAAAAQAAAACwAADgAAQUxQSIQAAAABgFvb1rLo/t+/FqnThUbuEFMAdWgVUgANkBGReQF8Ge5k4+7zcce+qSEiJmD0Nqnlg4Xu/RmLkoq/FZfOMT8+1fvrOy+jkFQ8ncihB0Lyk3f1as6EgOQbWxAwBCCpngKwmMAvlmDizzEbEPh704aAdteBqVtsLTB0Z9Z/HJsQ0KbcMHRWUDggWgAAAHACAJ0BKgwADwAEAGglsAJ0MEAIisvznHrmZQAA8KBxPAjy0tBmpImie1X2zFj9pxUIJHDHZ/S1eSghF9D8lQS37fnBmQOrvC837Y4etF/MWOXfbiH7MCAAAA==";
