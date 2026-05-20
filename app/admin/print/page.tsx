@@ -130,7 +130,6 @@ function TalentPage({ sub }: { sub: Submission }) {
                   <span className="mag-exp-title">{e.title || "—"}</span>
                   {e.organization ? <> · {e.organization}</> : null}
                   {e.period ? <span className="mag-exp-period"> · {e.period}</span> : null}
-                  {e.description && <div className="mag-exp-desc">{e.description}</div>}
                 </li>
               ))}
             </ul>

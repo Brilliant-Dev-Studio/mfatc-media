@@ -145,7 +145,6 @@ export async function POST(request: Request) {
       title: String(e?.title ?? "").trim(),
       organization: String(e?.organization ?? "").trim(),
       period: String(e?.period ?? "").trim(),
-      description: String(e?.description ?? "").trim(),
     })),
   });
 

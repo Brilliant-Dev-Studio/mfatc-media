@@ -2,7 +2,7 @@ export type ExperienceEntry = {
   title: string;
   organization: string;
   period: string;
-  description: string;
+  description?: string;
 };
 
 export type Submission = {

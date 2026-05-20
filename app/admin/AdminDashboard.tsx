@@ -277,7 +277,6 @@ function Detail({ sub }: { sub: Submission }) {
                       <span className="text-xs text-muted">{e.period}</span>
                     </div>
                     <div className="text-xs text-muted">{e.organization}</div>
-                    {e.description && <p className="mt-1.5 text-xs">{e.description}</p>}
                   </li>
                 ))}
               </ul>

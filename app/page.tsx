@@ -71,7 +71,7 @@ type PhotoState =
   | { status: "error"; preview: string; message: string };
 
 
-const EMPTY_EXP: ExperienceEntry = { title: "", organization: "", period: "", description: "" };
+const EMPTY_EXP: ExperienceEntry = { title: "", organization: "", period: "" };
 
 export default function FormPage() {
   const [name, setName] = useState("");
@@ -93,9 +93,7 @@ export default function FormPage() {
   const [nrcBack, setNrcBack] = useState<PhotoState>(null);
   const [portraits, setPortraits] = useState<PhotoState[]>([null, null, null, null]);
   const [artStatement, setArtStatement] = useState("");
-  const [experience, setExperience] = useState<ExperienceEntry[]>(() =>
-    Array.from({ length: 5 }, () => ({ ...EMPTY_EXP })),
-  );
+  const [experience, setExperience] = useState<ExperienceEntry[]>(() => [{ ...EMPTY_EXP }]);
 
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -167,7 +165,7 @@ export default function FormPage() {
     setNrcBack((prev) => { revokePreview(prev); return null; });
     setPortraits((prev) => { prev.forEach(revokePreview); return [null, null, null, null]; });
     setArtStatement("");
-    setExperience(Array.from({ length: 5 }, () => ({ ...EMPTY_EXP })));
+    setExperience([{ ...EMPTY_EXP }]);
     setErrors([]);
   }
 
@@ -216,7 +214,7 @@ export default function FormPage() {
       nrcBack: nrcBackKey,
       portraits: portraitKeys as string[],
       artStatement: artStatement.trim(),
-      experience: experience.filter((x) => x.title || x.period || x.description),
+      experience: experience.filter((x) => x.title || x.period),
     };
     try {
       const res = await fetch("/api/submissions", {
@@ -628,9 +626,22 @@ export default function FormPage() {
           <div className="mt-3 flex flex-col gap-3">
             {experience.map((exp, idx) => (
               <div key={idx} className="px-1 pt-2 pb-1">
-                <span className="text-xs uppercase tracking-wider text-muted">
-                  Entry {idx + 1} (optional)
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-wider text-muted">
+                    Entry {idx + 1} (optional)
+                  </span>
+                  {experience.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExperience((prev) => prev.filter((_, i) => i !== idx))
+                      }
+                      className="gf-btn-text"
+                    >
+                      ဖျက်မယ်
+                    </button>
+                  )}
+                </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <input
                     placeholder="သင်တန်းတက်ခဲ့သော ခုနှစ်"
@@ -644,16 +655,18 @@ export default function FormPage() {
                     onChange={(e) => updateExp(idx, { title: e.target.value })}
                     className="gf-input"
                   />
-                  <textarea
-                    placeholder="ဘာတွေလုပ်ခဲ့လဲ"
-                    rows={2}
-                    value={exp.description}
-                    onChange={(e) => updateExp(idx, { description: e.target.value })}
-                    className="gf-textarea sm:col-span-2"
-                  />
                 </div>
               </div>
             ))}
+            {experience.length < 5 && (
+              <button
+                type="button"
+                onClick={() => setExperience((prev) => [...prev, { ...EMPTY_EXP }])}
+                className="gf-btn-outline self-start"
+              >
+                + သင်တန်း ထပ်ထည့်မယ်
+              </button>
+            )}
           </div>
         </Question>
 
