@@ -228,13 +228,18 @@ export default function FormPage() {
             </button>
           </div>
         </div>
-        <footer className="text-on-stage mt-4 px-2 text-center text-xs">
-          <div>MFATC Studio · Yangon</div>
+        <footer className="text-on-stage mt-4 px-2 text-center text-xs leading-relaxed">
+          <div className="font-medium">
+            MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
+          </div>
+          <div>Myanmar Film Acting Promotion Course</div>
+          <div className="mt-1">MFATC Studio · Yangon, Myanmar</div>
           <div className="mt-1">
             <a href="viber://add?number=95936536562" className="underline">
               Viber — 0936536562
             </a>
           </div>
+          <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
         </footer>
         </main>
       </div>
@@ -271,6 +276,31 @@ export default function FormPage() {
             မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
           </h1>
           <p className="mt-1 text-xs text-muted sm:text-sm">Myanmar Film Acting Promotion Course</p>
+          <div className="mt-4 gf-divider" />
+          <div className="mt-3 flex flex-col gap-1.5 text-sm leading-relaxed">
+            <p>
+              MFATC (Myanmar Film Acting Promotion Course) သည် Yangon, Myanmar
+              အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်းတစ်ခု ဖြစ်ပါသည်။
+              ဤစာမျက်နှာသည် သင်တန်းသား လျှောက်လွှာ form ဖြစ်ပါသည်။
+            </p>
+            <p className="gf-helper">
+              လျှောက်ထားသူသည် မြန်မာနိုင်ငံသား အသက် ၁၈–၂၈ ကြား
+              ဖြစ်ရန် လိုအပ်သဖြင့် မှတ်ပုံတင် (NRC) ပုံ ၂ ပုံကို
+              <strong> သက်တမ်း + ပုဂ္ဂိုလ်ရေး စိစစ်ရေး အတွက်သာ </strong>
+              ယူပါသည်။ ပြင်ပ မထုတ်ပါ။
+            </p>
+            <p className="gf-helper">
+              သင့်ရဲ့ data များကို သင်တန်းသား စိစစ်ရေး / ဆက်သွယ်ရေး
+              အတွက်သာ သုံးပါမည်။ စီးပွားရေး ရောင်းချမှု မရှိပါ။
+            </p>
+            <p className="gf-helper">
+              ဆက်သွယ်ရန် —{" "}
+              <a href="viber://add?number=95936536562" className="gf-link">
+                Viber 0936536562
+              </a>{" "}
+              · MFATC Studio, Yangon, Myanmar
+            </p>
+          </div>
           <div className="mt-4 gf-divider" />
           <p className="mt-3 text-sm">
             <span className="required-mark">*</span>
@@ -366,7 +396,11 @@ export default function FormPage() {
           </div>
         </Question>
 
-        <Question label="နေရပ်လိပ်စာ" required>
+        <Question
+          label="နေရပ်လိပ်စာ"
+          required
+          helper="သင်တန်း ဆက်သွယ်ရေး / စာရွက်စာတမ်း ပို့ရန်သာ။"
+        >
           <textarea
             required
             rows={2}
@@ -388,7 +422,11 @@ export default function FormPage() {
           />
         </Question>
 
-        <Question label="မှတ်ပုံတင် (NRC) ပုံ" required helper="ရှေ့ဘက် + နောက်ဘက် နှစ်ပုံ တင်ပါ။">
+        <Question
+          label="မှတ်ပုံတင် (NRC) ပုံ"
+          required
+          helper="သက်တမ်း (၁၈+) + သရုပ်ဆောင် စိစစ်ရေး အတွက်သာ — ပြင်ပ မထုတ်ပါ။ ရှေ့ဘက် + နောက်ဘက် နှစ်ပုံ တင်ပါ။"
+        >
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <PhotoField
               label="ရှေ့ဘက်"
@@ -501,7 +539,11 @@ export default function FormPage() {
           </div>
         </Question>
 
-        <Question label="မိသားစုမှ ခွင့်ပြု/မပြု" required>
+        <Question
+          label="မိသားစုမှ ခွင့်ပြု/မပြု"
+          required
+          helper="ကိုယ်တိုင် ဖြေဆိုခြင်း ဖြစ်ပါသည် — မိသားစုကို ဆက်သွယ်မှု မရှိပါ။"
+        >
           <div className="mt-2 flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
             <label className="flex cursor-pointer items-center gap-2">
               <input
@@ -583,13 +625,18 @@ export default function FormPage() {
         </p>
       </form>
 
-      <footer className="text-on-stage mt-6 px-2 text-center text-xs">
-        <div>MFATC Studio · Yangon</div>
+      <footer className="text-on-stage mt-6 px-2 text-center text-xs leading-relaxed">
+        <div className="font-medium">
+          MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
+        </div>
+        <div>Myanmar Film Acting Promotion Course</div>
+        <div className="mt-1">MFATC Studio · Yangon, Myanmar</div>
         <div className="mt-1">
           <a href="viber://add?number=95936536562" className="underline">
             Viber — 0936536562
           </a>
         </div>
+        <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
       </footer>
       </main>
     </div>
