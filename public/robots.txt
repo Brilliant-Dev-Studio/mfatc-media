@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api
 
-Sitemap: https://atc-acting.online/sitemap.xml
+Sitemap: https://mfatc-acting.online/sitemap.xml

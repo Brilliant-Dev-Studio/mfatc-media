@@ -5,7 +5,7 @@ import "./globals.css";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-const SITE_URL = "https://atc-acting.online";
+const SITE_URL = "https://mfatc-acting.online";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
