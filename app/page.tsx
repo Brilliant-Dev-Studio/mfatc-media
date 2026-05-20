@@ -8,6 +8,12 @@ import type { ExperienceEntry } from "@/lib/types";
 const STAGE_BG_BLUR =
   "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABwBACdASoQABcAPxFwsFAsJiSisAgBgCIJbACdMoR3ACnKaVmqUXl0kEKkAAD94CMGWnjEyV69p11Buo4NejcUT4fD9z+wLaUPLTxlqnVDXcEFrBrG1lOyr4IdRVbt+ByrdoJ8je6zZQ3/ciakGJC6l4v4CggAAAA=";
 
+const CURTAIN_LEFT_BLUR =
+  "data:image/webp;base64,UklGRgQBAABXRUJQVlA4WAoAAAAQAAAACwAADgAAQUxQSIQAAAABgFvb1rLo/t+/FqnThUbuEFMAdWgVUgANkBGReQF8Ge5k4+7zcce+qSEiJmD0Nqnlg4Xu/RmLkoq/FZfOMT8+1fvrOy+jkFQ8ncihB0Lyk3f1as6EgOQbWxAwBCCpngKwmMAvlmDizzEbEPh704aAdteBqVtsLTB0Z9Z/HJsQ0KbcMHRWUDggWgAAAHACAJ0BKgwADwAEAGglsAJ0MEAIisvznHrmZQAA8KBxPAjy0tBmpImie1X2zFj9pxUIJHDHZ/S1eSghF9D8lQS37fnBmQOrvC837Y4etF/MWOXfbiH7MCAAAA==";
+
+const CURTAIN_RIGHT_BLUR =
+  "data:image/webp;base64,UklGRgABAABXRUJQVlA4WAoAAAAQAAAACwAADgAAQUxQSIMAAAABgFvbtqpqP0EyYgYZgzpogkELVEBGA2Se04C7NaCRuzvEDvdtvtYQEeGaVVtei9Fkjwyi1hM1XqYnCnbh1HgXpHiwI8NxpkahCfYgw+wpNe/8gSxBQpJPdgFIigq7eP0CIMNHdn5LMGbZ/g0JamX1ByrC+78Smqu/wGL2V0Li8J/NDQBWUDggVgAAAPABAJ0BKgwADwAEAGglsAJ0MEWAraESGADL9NRym/P7SS62XRf9XbH5sKxGLsMLnS+7lhNVJlxNGVhpiJIzGvouN/vG0/BdzPWy/t0N52DilWACfAAA";
+
 function StageBackground() {
   return (
     <div className="stage-bg" aria-hidden>
@@ -22,6 +28,37 @@ function StageBackground() {
         className="stage-bg-img"
       />
     </div>
+  );
+}
+
+function StageCurtains() {
+  return (
+    <>
+      <Image
+        src="/Gemini_Generated_Image_kxdflakxdflakxdf-removebg-preview.png"
+        alt=""
+        aria-hidden
+        width={191}
+        height={243}
+        priority
+        placeholder="blur"
+        blurDataURL={CURTAIN_LEFT_BLUR}
+        sizes="(max-width: 480px) 36vw, 32vw"
+        className="stage-curtain stage-curtain-left"
+      />
+      <Image
+        src="/Gemini_Generated_Image_1oiujm1oiujm1oiu-removebg-preview.png"
+        alt=""
+        aria-hidden
+        width={191}
+        height={236}
+        priority
+        placeholder="blur"
+        blurDataURL={CURTAIN_RIGHT_BLUR}
+        sizes="(max-width: 480px) 36vw, 32vw"
+        className="stage-curtain stage-curtain-right"
+      />
+    </>
   );
 }
 
@@ -207,20 +244,7 @@ export default function FormPage() {
     return (
       <div className="stage-page">
         <StageBackground />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/Gemini_Generated_Image_kxdflakxdflakxdf-removebg-preview.png"
-          alt=""
-          aria-hidden
-          className="stage-curtain stage-curtain-left"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/Gemini_Generated_Image_1oiujm1oiujm1oiu-removebg-preview.png"
-          alt=""
-          aria-hidden
-          className="stage-curtain stage-curtain-right"
-        />
+        <StageCurtains />
         <main className="mx-auto w-full max-w-160 px-4 py-6 sm:py-10">
           <div className="gf-card gf-stripe-top">
           {/* eslint-disable-next-line @next/next/no-img-element */}
