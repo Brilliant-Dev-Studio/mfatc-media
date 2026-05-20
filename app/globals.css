@@ -19,7 +19,7 @@
   --gf-primary-dark: #6F3F07;
   --gf-primary-hover: #F5B800;
   --gf-primary-tint: rgba(253, 200, 58, 0.22);
-  --gf-required: #d93025;
+  --gf-required: #8B2C2C;
   --gf-hover: rgba(111, 63, 7, 0.05);
 }
 
@@ -45,15 +45,16 @@ body {
 .gf-card {
   background: var(--gf-card);
   border: 1px solid var(--gf-border);
-  border-radius: 8px;
+  border-radius: 14px;
   padding: 24px;
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.04);
 }
 
 .gf-stripe-top {
-  border-top: 10px solid var(--gf-primary);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top: 6px solid var(--gf-primary);
+  border-left: 6px solid var(--gf-primary);
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
 }
 
 .gf-label {
@@ -172,7 +173,12 @@ body {
 }
 .gf-link:hover { text-decoration: underline; }
 
-.required-mark { color: var(--gf-required); margin-left: 2px; }
+.required-mark {
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gf-required);
+}
 
 .gf-chip {
   display: inline-flex;

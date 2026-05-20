@@ -213,7 +213,8 @@ export default function FormPage() {
           </h1>
           <p className="mt-1 text-xs text-muted sm:text-sm">Myanmar Film Acting Promotion Course</p>
           <p className="mt-3 gf-helper">
-            Submit လုပ်ပေးတာ ကျေးဇူးပါ။
+            လျှောက်လွှာ တင်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ MFATC team က
+            မကြာခင် ဆက်သွယ်ပါမယ်။
           </p>
           <div className="mt-5">
             <button
@@ -224,7 +225,7 @@ export default function FormPage() {
               }}
               className="gf-link text-sm"
             >
-              Submit another response
+              နောက်တစ်ခု ထပ်တင်မယ်
             </button>
           </div>
         </div>
@@ -302,9 +303,9 @@ export default function FormPage() {
             </p>
           </div>
           <div className="mt-4 gf-divider" />
-          <p className="mt-3 text-sm">
-            <span className="required-mark">*</span>
-            <span className="ml-1">Indicates required question</span>
+          <p className="mt-3 text-sm text-muted">
+            <span className="required-mark">လိုအပ်*</span>
+            <span className="ml-2">ပါတဲ့ အချက်တွေ ဖြည့်ပေးပါ။</span>
           </p>
         </header>
 
@@ -616,13 +617,9 @@ export default function FormPage() {
             {busy ? "Submitting…" : "Submit"}
           </button>
           <button type="button" onClick={resetForm} className="gf-btn-text">
-            Clear form
+            ပြန်ရှင်းမယ်
           </button>
         </div>
-
-        <p className="text-on-stage mt-1 px-1 text-xs">
-          Never submit passwords through this form.
-        </p>
       </form>
 
       <footer className="text-on-stage mt-6 px-2 text-center text-xs leading-relaxed">
@@ -658,7 +655,7 @@ function Question({
     <section className="gf-card">
       <div className="gf-question">
         {label}
-        {required && <span className="required-mark">*</span>}
+        {required && <span className="required-mark">လိုအပ်*</span>}
       </div>
       {helper && <p className="mt-1 gf-helper">{helper}</p>}
       <div className="mt-4">{children}</div>
