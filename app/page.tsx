@@ -283,6 +283,11 @@ export default function FormPage() {
               Viber — 0936536562
             </a>
           </div>
+          <div className="mt-1">
+            <a href="mailto:myanmar.mfatc@gmail.com" className="underline">
+              myanmar.mfatc@gmail.com
+            </a>
+          </div>
           <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
         </footer>
         </main>
@@ -689,6 +694,11 @@ export default function FormPage() {
         <div className="mt-1">
           <a href="viber://add?number=95936536562" className="underline">
             Viber — 0936536562
+          </a>
+        </div>
+        <div className="mt-1">
+          <a href="mailto:myanmar.mfatc@gmail.com" className="underline">
+            myanmar.mfatc@gmail.com
           </a>
         </div>
         <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
