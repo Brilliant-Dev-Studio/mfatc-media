@@ -207,23 +207,24 @@ body {
   z-index: 0;
   pointer-events: none;
   background-color: #6F3F07;
-  background-image: url("/mfatc_background.png");
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
+  overflow: hidden;
+}
+.stage-bg-img {
+  object-fit: cover;
+  object-position: center top;
 }
 
-/* Desktop polish — show the image's focal middle (not just the top) and
-   soften the corners with a vignette so the bronze fallback never feels
-   accidental. Curtains stay visible on both viewports. */
+/* Desktop — keep cover + center top so we show the clean top pattern
+   instead of the middle drapery section. A soft vignette darkens the
+   corners so curtains blend into the page edge. */
 @media (min-width: 768px) {
-  .stage-bg { background-position: center center; }
   .stage-bg::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
     background: radial-gradient(ellipse 70% 95% at center, transparent 38%, rgba(42, 22, 5, 0.55) 100%);
+    z-index: 1;
   }
 }
 

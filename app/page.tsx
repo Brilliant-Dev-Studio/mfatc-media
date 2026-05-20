@@ -1,8 +1,29 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import { fileToThumbnailBlob } from "@/lib/image";
 import type { ExperienceEntry } from "@/lib/types";
+
+const STAGE_BG_BLUR =
+  "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABwBACdASoQABcAPxFwsFAsJiSisAgBgCIJbACdMoR3ACnKaVmqUXl0kEKkAAD94CMGWnjEyV69p11Buo4NejcUT4fD9z+wLaUPLTxlqnVDXcEFrBrG1lOyr4IdRVbt+ByrdoJ8je6zZQ3/ciakGJC6l4v4CggAAAA=";
+
+function StageBackground() {
+  return (
+    <div className="stage-bg" aria-hidden>
+      <Image
+        src="/mfatc_background.png"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        placeholder="blur"
+        blurDataURL={STAGE_BG_BLUR}
+        className="stage-bg-img"
+      />
+    </div>
+  );
+}
 
 type PhotoSlot = "nrc-front" | "nrc-back" | "portrait-1" | "portrait-2" | "portrait-3" | "portrait-4";
 
@@ -185,7 +206,7 @@ export default function FormPage() {
   if (done) {
     return (
       <div className="stage-page">
-        <div className="stage-bg" aria-hidden />
+        <StageBackground />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/Gemini_Generated_Image_kxdflakxdflakxdf-removebg-preview.png"
@@ -249,7 +270,7 @@ export default function FormPage() {
 
   return (
     <div className="stage-page">
-      <div className="stage-bg" aria-hidden />
+      <StageBackground />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/Gemini_Generated_Image_kxdflakxdflakxdf-removebg-preview.png"
@@ -582,7 +603,7 @@ export default function FormPage() {
         <Question label="တက်ရောက် ခဲ့သော သင်တန်းများ (optional)" helper="ရှိရင်သာ ထည့်ပါ — ၅ ခုအထိ ထည့်လို့ရတယ်။">
           <div className="mt-3 flex flex-col gap-3">
             {experience.map((exp, idx) => (
-              <div key={idx} className="rounded-md border border-border p-4">
+              <div key={idx} className="px-1 pt-2 pb-1">
                 <span className="text-xs uppercase tracking-wider text-muted">
                   Entry {idx + 1} (optional)
                 </span>
