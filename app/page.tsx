@@ -273,6 +273,12 @@ export default function FormPage() {
           </div>
         </div>
         <footer className="text-on-stage mt-4 px-2 text-center text-xs leading-relaxed">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/IMG_4294.png"
+            alt="MFATC"
+            className="mx-auto mb-2 h-10 w-auto sm:h-12"
+          />
           <div className="font-medium">
             MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
           </div>
@@ -686,6 +692,12 @@ export default function FormPage() {
       </form>
 
       <footer className="text-on-stage mt-6 px-2 text-center text-xs leading-relaxed">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/IMG_4294.png"
+          alt="MFATC"
+          className="mx-auto mb-2 h-10 w-auto sm:h-12"
+        />
         <div className="font-medium">
           MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
         </div>
