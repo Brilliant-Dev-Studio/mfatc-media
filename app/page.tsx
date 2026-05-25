@@ -273,12 +273,6 @@ export default function FormPage() {
           </div>
         </div>
         <footer className="text-on-stage mt-4 px-2 text-center text-xs leading-relaxed">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/IMG_4294.png"
-            alt="MFATC"
-            className="mx-auto mb-2 h-10 w-auto sm:h-12"
-          />
           <div className="font-medium">
             MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
           </div>
@@ -295,6 +289,26 @@ export default function FormPage() {
             </a>
           </div>
           <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
+          <div className="mt-3 flex flex-row items-end justify-center gap-6">
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] opacity-70">Arrange by</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/IMG_4294.png"
+                alt="MFATC"
+                className="mt-1 h-7 w-auto sm:h-8"
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] opacity-70">Main sponsor by</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/partnerby.jpg"
+                alt="Main sponsor"
+                className="mt-1 h-7 w-auto sm:h-8"
+              />
+            </div>
+          </div>
         </footer>
         </main>
       </div>
@@ -692,12 +706,6 @@ export default function FormPage() {
       </form>
 
       <footer className="text-on-stage mt-6 px-2 text-center text-xs leading-relaxed">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/IMG_4294.png"
-          alt="MFATC"
-          className="mx-auto mb-2 h-10 w-auto sm:h-12"
-        />
         <div className="font-medium">
           MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
         </div>
@@ -714,6 +722,26 @@ export default function FormPage() {
           </a>
         </div>
         <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
+        <div className="mt-3 flex flex-row items-end justify-center gap-6">
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] opacity-70">Arrange by</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/IMG_4294.png"
+              alt="MFATC"
+              className="mt-1 h-7 w-auto sm:h-8"
+            />
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] opacity-70">Main sponsor by</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/partnerby.jpg"
+              alt="Main sponsor"
+              className="mt-1 h-7 w-auto sm:h-8"
+            />
+          </div>
+        </div>
       </footer>
       </main>
     </div>
