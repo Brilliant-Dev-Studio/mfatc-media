@@ -296,16 +296,16 @@ export default function FormPage() {
               <img
                 src="/IMG_4294.png"
                 alt="MFATC"
-                className="mt-1 h-7 w-auto sm:h-8"
+                className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
               />
             </div>
             <div className="flex flex-col items-center">
               <span className="text-[10px] opacity-70">Main sponsor by</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/partnerby.jpg"
+                src="/partnerby.png"
                 alt="Main sponsor"
-                className="mt-1 h-7 w-auto sm:h-8"
+                className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
               />
             </div>
           </div>
@@ -729,16 +729,16 @@ export default function FormPage() {
             <img
               src="/IMG_4294.png"
               alt="MFATC"
-              className="mt-1 h-7 w-auto sm:h-8"
+              className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
             />
           </div>
           <div className="flex flex-col items-center">
             <span className="text-[10px] opacity-70">Main sponsor by</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/partnerby.jpg"
+              src="/partnerby.png"
               alt="Main sponsor"
-              className="mt-1 h-7 w-auto sm:h-8"
+              className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
             />
           </div>
         </div>
