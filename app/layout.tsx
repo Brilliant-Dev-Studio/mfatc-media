@@ -11,26 +11,26 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default:
-      "MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း (Myanmar Film Acting Promotion Course)",
-    template: "%s · MFATC",
+      "MFAPC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း (Myanmar Film Acting Promotion Course)",
+    template: "%s · MFAPC",
   },
   description:
-    "Myanmar Film Acting Promotion Course (MFATC) — Yangon အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်း၏ တရားဝင် လျှောက်လွှာ form။ အသက် ၁၈–၂၈ ကြား မြန်မာနိုင်ငံသား လူငယ်များအတွက် သင်တန်းသား စိစစ်ရေး application။",
-  applicationName: "MFATC",
+    "Myanmar Film Acting Promotion Course (MFAPC) — Yangon အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်း၏ တရားဝင် လျှောက်လွှာ form။ အသက် ၁၈–၂၈ ကြား မြန်မာနိုင်ငံသား လူငယ်များအတွက် သင်တန်းသား စိစစ်ရေး application။",
+  applicationName: "MFAPC",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE_URL,
-    siteName: "MFATC",
-    title: "MFATC — Myanmar Film Acting Promotion Course",
+    siteName: "MFAPC",
+    title: "MFAPC — Myanmar Film Acting Promotion Course",
     description:
       "Yangon အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်း၏ တရားဝင် လျှောက်လွှာ form။ အသက် ၁၈–၂၈ ကြား။",
     locale: "my_MM",
-    images: [{ url: "/logo.png", width: 1200, height: 630, alt: "MFATC" }],
+    images: [{ url: "/logo.png", width: 1200, height: 630, alt: "MFAPC" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MFATC — Myanmar Film Acting Promotion Course",
+    title: "MFAPC — Myanmar Film Acting Promotion Course",
     description:
       "Yangon အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်း၏ တရားဝင် လျှောက်လွှာ form။",
     images: ["/logo.png"],

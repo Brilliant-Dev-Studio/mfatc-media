@@ -5,7 +5,7 @@ import { presignGet, s3Configured } from "@/lib/s3";
 import type { Submission } from "@/lib/types";
 import { AutoPrint } from "./AutoPrint";
 
-export const metadata = { title: "MFATC Submissions — Export" };
+export const metadata = { title: "MFAPC Submissions — Export" };
 
 type Search = {
   page?: string;

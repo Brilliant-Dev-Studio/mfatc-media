@@ -248,7 +248,7 @@ export default function FormPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
-            alt="MFATC"
+            alt="MFAPC"
             className="mb-3 h-12 w-auto sm:h-14"
           />
           <h1 className="whitespace-nowrap text-[13px] font-normal leading-tight sm:text-[22px]">
@@ -256,7 +256,7 @@ export default function FormPage() {
           </h1>
           <p className="mt-1 text-xs text-muted sm:text-sm">Myanmar Film Acting Promotion Course</p>
           <p className="mt-3 gf-helper">
-            လျှောက်လွှာ တင်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ MFATC team က
+            လျှောက်လွှာ တင်ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ်။ MFAPC team က
             မကြာခင် ဆက်သွယ်ပါမယ်။
           </p>
           <div className="mt-5">
@@ -274,10 +274,10 @@ export default function FormPage() {
         </div>
         <footer className="text-on-stage mt-4 px-2 text-center text-xs leading-relaxed">
           <div className="font-medium">
-            MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
+            MFAPC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
           </div>
           <div>Myanmar Film Acting Promotion Course</div>
-          <div className="mt-1">MFATC Studio · Yangon, Myanmar</div>
+          <div className="mt-1">MFAPC Studio · Yangon, Myanmar</div>
           <div className="mt-1">
             <a href="viber://add?number=95936536562" className="underline">
               Viber — 0936536562
@@ -288,14 +288,14 @@ export default function FormPage() {
 myanmar.mfapc@gmail.com
             </a>
           </div>
-          <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
+          <div className="mt-2 opacity-80">© 2026 MFAPC. All rights reserved.</div>
           <div className="mt-3 flex flex-row items-end justify-center gap-6">
             <div className="flex flex-col items-center">
               <span className="text-[10px] opacity-70">Arrange by</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo.png"
-                alt="MFATC"
+                alt="MFAPC"
                 className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
               />
             </div>
@@ -338,7 +338,7 @@ myanmar.mfapc@gmail.com
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
-            alt="MFATC"
+            alt="MFAPC"
             className="mb-3 h-12 w-auto sm:h-14"
           />
           <h1 className="whitespace-nowrap text-[13px] font-normal leading-tight sm:text-[22px]">
@@ -348,7 +348,7 @@ myanmar.mfapc@gmail.com
           <div className="mt-4 gf-divider" />
           <div className="mt-3 flex flex-col gap-1.5 text-sm leading-relaxed">
             <p>
-              MFATC (Myanmar Film Acting Promotion Course) သည် Yangon, Myanmar
+              MFAPC (Myanmar Film Acting Promotion Course) သည် Yangon, Myanmar
               အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်းတစ်ခု ဖြစ်ပါသည်။
               ဤစာမျက်နှာသည် သင်တန်းသား လျှောက်လွှာ form ဖြစ်ပါသည်။
             </p>
@@ -367,7 +367,7 @@ myanmar.mfapc@gmail.com
               <a href="viber://add?number=95936536562" className="gf-link">
                 Viber 0936536562
               </a>{" "}
-              · MFATC Studio, Yangon, Myanmar
+              · MFAPC Studio, Yangon, Myanmar
             </p>
           </div>
           <div className="mt-4 gf-divider" />
@@ -707,10 +707,10 @@ myanmar.mfapc@gmail.com
 
       <footer className="text-on-stage mt-6 px-2 text-center text-xs leading-relaxed">
         <div className="font-medium">
-          MFATC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
+          MFAPC — မြန်မာ့ရှပ်ရှင်သရုပ်ဆောင်မြှင့်တင်ရေးသင်တန်း
         </div>
         <div>Myanmar Film Acting Promotion Course</div>
-        <div className="mt-1">MFATC Studio · Yangon, Myanmar</div>
+        <div className="mt-1">MFAPC Studio · Yangon, Myanmar</div>
         <div className="mt-1">
           <a href="viber://add?number=95936536562" className="underline">
             Viber — 0936536562
@@ -721,14 +721,14 @@ myanmar.mfapc@gmail.com
             myanmar.mfapc@gmail.com
           </a>
         </div>
-        <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
+        <div className="mt-2 opacity-80">© 2026 MFAPC. All rights reserved.</div>
         <div className="mt-3 flex flex-row items-end justify-center gap-6">
           <div className="flex flex-col items-center">
             <span className="text-[10px] opacity-70">Arrange by</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
-              alt="MFATC"
+              alt="MFAPC"
               className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
             /> 
           </div>
