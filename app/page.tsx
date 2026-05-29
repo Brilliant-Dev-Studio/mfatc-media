@@ -247,7 +247,7 @@ export default function FormPage() {
           <div className="gf-card gf-stripe-top">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/IMG_4294.png"
+            src="/logo.png"
             alt="MFATC"
             className="mb-3 h-12 w-auto sm:h-14"
           />
@@ -294,7 +294,7 @@ export default function FormPage() {
               <span className="text-[10px] opacity-70">Arrange by</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/IMG_4294.png"
+                src="/logo.png"
                 alt="MFATC"
                 className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
               />
@@ -337,7 +337,7 @@ export default function FormPage() {
         <header className="gf-card gf-stripe-top">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/IMG_4294.png"
+            src="/logo.png"
             alt="MFATC"
             className="mb-3 h-12 w-auto sm:h-14"
           />
@@ -727,7 +727,7 @@ export default function FormPage() {
             <span className="text-[10px] opacity-70">Arrange by</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/IMG_4294.png"
+              src="/logo.png"
               alt="MFATC"
               className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
             />

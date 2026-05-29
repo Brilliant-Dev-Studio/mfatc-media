@@ -26,14 +26,14 @@ export const metadata: Metadata = {
     description:
       "Yangon အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်း၏ တရားဝင် လျှောက်လွှာ form။ အသက် ၁၈–၂၈ ကြား။",
     locale: "my_MM",
-    images: [{ url: "/IMG_4294.png", width: 1200, height: 630, alt: "MFATC" }],
+    images: [{ url: "/logo.png", width: 1200, height: 630, alt: "MFATC" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "MFATC — Myanmar Film Acting Promotion Course",
     description:
       "Yangon အခြေစိုက် ရုပ်ရှင် သရုပ်ဆောင် သင်တန်း၏ တရားဝင် လျှောက်လွှာ form။",
-    images: ["/IMG_4294.png"],
+    images: ["/logo.png"],
   },
   icons: {
     icon: [
