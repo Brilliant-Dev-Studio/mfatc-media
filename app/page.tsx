@@ -284,8 +284,8 @@ export default function FormPage() {
             </a>
           </div>
           <div className="mt-1">
-            <a href="mailto:myanmar.mfatc@gmail.com" className="underline">
-              myanmar.mfatc@gmail.com
+            <a href="mailto:myanmar.mfapc@gmail.com" className="underline">
+myanmar.mfapc@gmail.com
             </a>
           </div>
           <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
@@ -717,8 +717,8 @@ export default function FormPage() {
           </a>
         </div>
         <div className="mt-1">
-          <a href="mailto:myanmar.mfatc@gmail.com" className="underline">
-            myanmar.mfatc@gmail.com
+          <a href="mailto:myanmar.mfapc@gmail.com" className="underline">
+            myanmar.mfapc@gmail.com
           </a>
         </div>
         <div className="mt-2 opacity-80">© 2026 MFATC. All rights reserved.</div>
@@ -730,7 +730,7 @@ export default function FormPage() {
               src="/logo.png"
               alt="MFATC"
               className="mt-1 h-12 w-24 object-contain sm:h-14 sm:w-28"
-            />
+            /> 
           </div>
           <div className="flex flex-col items-center">
             <span className="text-[10px] opacity-70">Main sponsor by</span>
