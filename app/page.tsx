@@ -435,7 +435,7 @@ myanmar.mfapc@gmail.com
           />
         </Question>
 
-        <Question label="Age နဲ့ Birthday" required helper="Age က ၁၈–၂၈ ထဲက ဖြစ်ရမယ်။">
+        <Question label="Age နဲ့ Birthday" required helper="Age က ၁၈–၃၅ ထဲက ဖြစ်ရမယ်။">
           <div className="grid grid-cols-2 gap-4">
             <label className="flex flex-col">
               <span className="gf-helper mb-1">Age</span>
@@ -444,7 +444,7 @@ myanmar.mfapc@gmail.com
                 required
                 inputMode="numeric"
                 min={18}
-                max={28}
+                max={35}
                 placeholder="22"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
