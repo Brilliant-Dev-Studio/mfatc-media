@@ -26,11 +26,14 @@ export type Submission = {
   nrcFront: string;
   nrcBack: string;
   portraits: string[];
+  gender: "male" | "female" | null;
   artStatement: string;
   experience: ExperienceEntry[];
+  batchNumber: number;
+  isSelected: boolean;
 };
 
-export type SubmissionInput = Omit<Submission, "id" | "createdAt">;
+export type SubmissionInput = Omit<Submission, "id" | "createdAt" | "batchNumber" | "isSelected">;
 
 export type SubmissionListResponse = {
   items: Submission[];

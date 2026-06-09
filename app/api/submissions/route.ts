@@ -25,11 +25,15 @@ export async function GET(request: NextRequest) {
   if (!admin) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const sp = request.nextUrl.searchParams;
+  const batchNumber = sp.get("batchNumber") ? Number(sp.get("batchNumber")) : undefined;
+  const selectedOnly = sp.get("selectedOnly") === "true";
   const data = await listSubmissions({
     page: Number(sp.get("page")) || 1,
     pageSize: Number(sp.get("pageSize")) || 10,
     q: sp.get("q") ?? "",
     field: (sp.get("field") as ListField) ?? "all",
+    batchNumber,
+    selectedOnly,
   });
 
   const items = await Promise.all(data.items.map(signSubmission));
@@ -87,6 +91,9 @@ export async function POST(request: Request) {
   if (typeof body.admiredArtist !== "string" || body.admiredArtist.trim().length < 1) {
     errors.push("အားကျသော အနုပညာရှင်အမည် ထည့်ပါ။");
   }
+  if (body.gender !== "male" && body.gender !== "female") {
+    errors.push("Gender (male / female) ရွေးပါ။");
+  }
   if (typeof body.canComplete !== "boolean") {
     errors.push("သင်တန်းကာလ ပြီးဆုံးအောင် တက်ရောက်နိုင်မှု ဖြေပါ။");
   }
@@ -140,6 +147,7 @@ export async function POST(request: Request) {
     nrcFront: body.nrcFront!,
     nrcBack: body.nrcBack!,
     portraits: body.portraits as string[],
+    gender: (body.gender === "male" || body.gender === "female") ? body.gender : null,
     artStatement: body.artStatement!.trim(),
     experience: (body.experience ?? []).map((e) => ({
       title: String(e?.title ?? "").trim(),

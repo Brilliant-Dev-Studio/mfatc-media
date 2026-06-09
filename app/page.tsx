@@ -87,6 +87,7 @@ export default function FormPage() {
   const [viberNo, setViberNo] = useState("");
   const [lifeGoal, setLifeGoal] = useState("");
   const [admiredArtist, setAdmiredArtist] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | null>(null);
   const [canComplete, setCanComplete] = useState<boolean | null>(null);
   const [familyApproval, setFamilyApproval] = useState<boolean | null>(null);
   const [nrcFront, setNrcFront] = useState<PhotoState>(null);
@@ -159,6 +160,7 @@ export default function FormPage() {
     setViberNo("");
     setLifeGoal("");
     setAdmiredArtist("");
+    setGender(null);
     setCanComplete(null);
     setFamilyApproval(null);
     setNrcFront((prev) => { revokePreview(prev); return null; });
@@ -179,6 +181,11 @@ export default function FormPage() {
     const portraitKeys = portraits.map(keyOf);
     if (!nrcFrontKey || !nrcBackKey || portraitKeys.some((k) => !k)) {
       setErrors(["ပုံ အကုန် upload ပြီးအောင် စောင့်ပါ — ထပ်စမ်းပါ။"]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if (gender === null) {
+      setErrors(["Gender (Male / Female) ရွေးပါ။"]);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -208,6 +215,7 @@ export default function FormPage() {
       viberNo: viberNo.trim(),
       lifeGoal: lifeGoal.trim(),
       admiredArtist: admiredArtist.trim(),
+      gender,
       canComplete: canComplete === true,
       familyApproval: familyApproval === true,
       nrcFront: nrcFrontKey,
@@ -461,6 +469,30 @@ myanmar.mfapc@gmail.com
                 max={new Date().toISOString().slice(0, 10)}
                 className="gf-input"
               />
+            </label>
+          </div>
+        </Question>
+
+        <Question label="Gender" required>
+          <div className="mt-2 flex gap-6 text-sm">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="gender"
+                checked={gender === "male"}
+                onChange={() => setGender("male")}
+                required
+              />
+              <span>Male (ကျား)</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="gender"
+                checked={gender === "female"}
+                onChange={() => setGender("female")}
+              />
+              <span>Female (မ)</span>
             </label>
           </div>
         </Question>
