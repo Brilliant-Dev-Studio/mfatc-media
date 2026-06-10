@@ -249,7 +249,7 @@ export function AdminDashboard({ username }: { username: string }) {
 
             {/* Table header */}
             <div
-              className="hidden grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px_36px] gap-4 border-b px-5 py-3 text-[10.5px] font-bold uppercase tracking-widest sm:grid"
+              className="hidden grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px] gap-4 border-b px-5 py-3 text-[10.5px] font-bold uppercase tracking-widest sm:grid"
               style={{
                 background: "linear-gradient(90deg, #3a1f04 0%, #5c3208 100%)",
                 borderColor: "rgba(253,200,58,0.2)",
@@ -262,7 +262,6 @@ export function AdminDashboard({ username }: { username: string }) {
               <span>Viber</span>
               <span>Statement</span>
               <span>Status</span>
-              <span></span>
               <span></span>
             </div>
 
@@ -423,7 +422,7 @@ function Row({
       style={{ borderColor: "var(--gf-border)" }}
     >
       <div
-        className="grid w-full grid-cols-[auto_1fr_auto_36px_36px] items-center gap-4 px-5 py-3.5 transition-colors hover:bg-amber-50/40 sm:grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px_36px]"
+        className="grid w-full grid-cols-[auto_1fr_auto_36px] items-center gap-4 px-5 py-3.5 transition-colors hover:bg-amber-50/40 sm:grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px]"
       >
         {/* Row number */}
         <span
@@ -490,24 +489,8 @@ function Row({
           {selectBusy ? "…" : inSelectedTab && sub.isSelected ? "Unselect" : sub.isSelected ? "✓ Selected" : "Select"}
         </button>
 
-        {/* Delete */}
-        <button
-          onClick={async () => {
-            setBusy(true);
-            try {
-              await onDelete();
-            } finally {
-              setBusy(false);
-            }
-          }}
-          disabled={busy}
-          aria-label="Delete submission"
-          title="Delete"
-          className="flex h-7 w-7 items-center justify-center rounded-full text-[12px] leading-none transition-all disabled:opacity-40 hover:bg-red-50"
-          style={{ color: "var(--gf-required)", opacity: 0.55 }}
-        >
-          {busy ? "…" : "✕"}
-        </button>
+        {/* Delete — hidden */}
+        <span className="hidden" />
 
         {/* Toggle expand */}
         <button
@@ -806,7 +789,7 @@ function SkeletonRow() {
           <div className="h-3.5 w-full animate-pulse rounded bg-black/8" />
         </div>
         <div className="h-6 w-16 animate-pulse rounded-full bg-black/8" />
-        <div className="h-7 w-7 animate-pulse rounded-full bg-black/6 justify-self-center" />
+        <span className="hidden" />
         <div className="h-7 w-7 animate-pulse rounded-full bg-black/6 justify-self-center" />
       </div>
     </li>
