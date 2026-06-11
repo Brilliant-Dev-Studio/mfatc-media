@@ -5,6 +5,85 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Submission, SubmissionListResponse } from "@/lib/types";
 
+function UserSearchBox({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (q: string) => void;
+}) {
+  const [focused, setFocused] = useState(false);
+
+  return (
+    <div
+      className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200"
+      style={{
+        background: focused
+          ? "#fff"
+          : "linear-gradient(135deg, #fff 0%, #fdf8ef 100%)",
+        border: focused
+          ? "1.5px solid #FDC83A"
+          : "1.5px solid rgba(111,63,7,0.18)",
+        boxShadow: focused
+          ? "0 0 0 3px rgba(253,200,58,0.18), 0 2px 12px rgba(111,63,7,0.10)"
+          : "0 2px 8px rgba(111,63,7,0.08)",
+        width: "100%",
+        maxWidth: "440px",
+      }}
+    >
+      {/* Search icon */}
+      <div
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition-colors duration-200"
+        style={{
+          background: focused
+            ? "linear-gradient(135deg, #FDC83A 0%, #e6a800 100%)"
+            : "rgba(111,63,7,0.07)",
+        }}
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 16 16"
+          fill="none"
+          style={{ color: focused ? "#6F3F07" : "var(--gf-text-muted)" }}
+          aria-hidden
+        >
+          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M10.8 10.8L14 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      </div>
+
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onKeyDown={(e) => { if (e.key === "Escape") onChange(""); }}
+        placeholder="နာမည်ဖြင့် ရှာပါ…"
+        className="flex-1 bg-transparent outline-none"
+        style={{
+          color: "var(--gf-text)",
+          fontSize: "15px",
+          fontWeight: 500,
+          minWidth: 0,
+        }}
+      />
+
+      {value && (
+        <button
+          onClick={() => onChange("")}
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-black/8"
+          style={{ color: "var(--gf-text-muted)", fontSize: "11px" }}
+          aria-label="Clear"
+        >
+          ✕
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function AdminDashboard({ username }: { username: string }) {
   const router = useRouter();
   const [data, setData] = useState<SubmissionListResponse | null>(null);
@@ -16,6 +95,9 @@ export function AdminDashboard({ username }: { username: string }) {
   const [activeTab, setActiveTab] = useState<"all" | "selected">("all");
   const [showFinishModal, setShowFinishModal] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  const [inputQuery, setInputQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     fetch("/api/batches/current")
@@ -29,27 +111,43 @@ export function AdminDashboard({ username }: { username: string }) {
     setLoading(true);
     const sp = new URLSearchParams({
       page: String(page),
-      pageSize: "10",
+      pageSize: "15",
       batchNumber: String(currentBatch),
     });
     if (activeTab === "selected") sp.set("selectedOnly", "true");
+    if (searchQuery.trim()) {
+      sp.set("q", searchQuery.trim());
+      sp.set("field", "name");
+    }
     const res = await fetch(`/api/submissions?${sp.toString()}`, { cache: "no-store" });
     if (res.ok) {
       const json = (await res.json()) as SubmissionListResponse;
       setData(json);
     }
     setLoading(false);
-  }, [page, currentBatch, activeTab]);
+  }, [page, currentBatch, activeTab, searchQuery]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const onSearchChange = (q: string) => {
+    setInputQuery(q);
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setSearchQuery(q);
+      setPage(1);
+      setExpanded(null);
+    }, 350);
+  };
 
   const onTabChange = (tab: "all" | "selected") => {
     setActiveTab(tab);
     setPage(1);
     setExpanded(null);
     setData(null);
+    setInputQuery("");
+    setSearchQuery("");
   };
 
   const onDeleteAll = async () => {
@@ -187,7 +285,7 @@ export function AdminDashboard({ username }: { username: string }) {
                 Export CSV
               </button>
               <a
-                href={`/admin/print?${new URLSearchParams({ page: String(page), pageSize: "10" }).toString()}`}
+                href={`/admin/print?${new URLSearchParams({ page: String(page), pageSize: "15" }).toString()}`}
                 target="_blank"
                 rel="noreferrer"
                 className="gf-btn-outline inline-flex h-7.5 items-center px-3 text-xs"
@@ -195,6 +293,11 @@ export function AdminDashboard({ username }: { username: string }) {
                 Download PDF
               </a>
             </div>
+          </div>
+
+          {/* Name search */}
+          <div className="mb-5">
+            <UserSearchBox value={inputQuery} onChange={onSearchChange} />
           </div>
 
           {/* Card wrapper */}
@@ -267,40 +370,42 @@ export function AdminDashboard({ username }: { username: string }) {
 
             {/* Rows */}
             <ul>
-              {loading && items.length === 0 &&
-                Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
-              {items.map((s, idx) => (
-                <Row
-                  key={s.id}
-                  sub={s}
-                  rowNumber={((data?.page ?? page) - 1) * (data?.pageSize ?? 10) + idx + 1}
-                  open={expanded === s.id}
-                  inSelectedTab={activeTab === "selected"}
-                  onToggle={() => setExpanded((cur) => (cur === s.id ? null : s.id))}
-                  onSelect={async (selected) => { await onSelect(s.id, selected); }}
-                  onDelete={async () => {
-                    const ok = window.confirm(
-                      `${s.name} (${s.id}) ကို permanent ဖျက်ပါမည်။ ပြန် undo လို့ မရပါ။ ဆက်လုပ်မလား?`,
-                    );
-                    if (!ok) return;
-                    const res = await fetch(`/api/submissions/${s.id}`, { method: "DELETE" });
-                    if (res.ok) {
-                      if (expanded === s.id) setExpanded(null);
-                      await fetchData();
-                    } else {
-                      window.alert("Delete failed");
-                    }
-                  }}
-                />
-              ))}
-              {!loading && items.length === 0 && (
-                <li
-                  className="px-4 py-14 text-center text-sm"
-                  style={{ color: "var(--gf-text-muted)" }}
-                >
-                  No submissions match.
-                </li>
-              )}
+              {loading
+                ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+                : items.length === 0
+                ? (
+                  <li
+                    className="px-4 py-14 text-center text-sm"
+                    style={{ color: "var(--gf-text-muted)" }}
+                  >
+                    No submissions match.
+                  </li>
+                )
+                : items.map((s, idx) => (
+                  <Row
+                    key={s.id}
+                    sub={s}
+                    rowNumber={((data?.page ?? page) - 1) * (data?.pageSize ?? 15) + idx + 1}
+                    open={expanded === s.id}
+                    inSelectedTab={activeTab === "selected"}
+                    onToggle={() => setExpanded((cur) => (cur === s.id ? null : s.id))}
+                    onSelect={async (selected) => { await onSelect(s.id, selected); }}
+                    onDelete={async () => {
+                      const ok = window.confirm(
+                        `${s.name} (${s.id}) ကို permanent ဖျက်ပါမည်။ ပြန် undo လို့ မရပါ။ ဆက်လုပ်မလား?`,
+                      );
+                      if (!ok) return;
+                      const res = await fetch(`/api/submissions/${s.id}`, { method: "DELETE" });
+                      if (res.ok) {
+                        if (expanded === s.id) setExpanded(null);
+                        await fetchData();
+                      } else {
+                        window.alert("Delete failed");
+                      }
+                    }}
+                  />
+                ))
+              }
             </ul>
           </div>
 
