@@ -86,6 +86,17 @@ export async function finishBatch(): Promise<number> {
   return next;
 }
 
+export async function listBatchNumbers(): Promise<number[]> {
+  await ensureSchema();
+  const current = await getCurrentBatch();
+  const rows = (await sql`
+    SELECT DISTINCT batch_number FROM submissions ORDER BY batch_number DESC
+  `) as { batch_number: number }[];
+  const set = new Set<number>(rows.map((r) => r.batch_number));
+  set.add(current);
+  return Array.from(set).sort((a, b) => b - a);
+}
+
 export async function setSelected(id: string, selected: boolean): Promise<boolean> {
   await ensureSchema();
   const rows = (await sql`

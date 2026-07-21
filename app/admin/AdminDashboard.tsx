@@ -92,6 +92,8 @@ export function AdminDashboard({ username }: { username: string }) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [currentBatch, setCurrentBatch] = useState<number | null>(null);
+  const [allBatches, setAllBatches] = useState<number[]>([]);
+  const [viewedBatch, setViewedBatch] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "selected">("all");
   const [showFinishModal, setShowFinishModal] = useState(false);
   const [finishing, setFinishing] = useState(false);
@@ -102,17 +104,27 @@ export function AdminDashboard({ username }: { username: string }) {
   useEffect(() => {
     fetch("/api/batches/current")
       .then((r) => r.json())
-      .then((d: { batch: number }) => setCurrentBatch(d.batch))
-      .catch(() => setCurrentBatch(1));
+      .then((d: { batch: number }) => {
+        setCurrentBatch(d.batch);
+        setViewedBatch(d.batch);
+      })
+      .catch(() => {
+        setCurrentBatch(1);
+        setViewedBatch(1);
+      });
+    fetch("/api/batches")
+      .then((r) => r.json())
+      .then((d: { batches: number[] }) => setAllBatches(d.batches))
+      .catch(() => {});
   }, []);
 
   const fetchData = useCallback(async () => {
-    if (currentBatch === null) return;
+    if (viewedBatch === null) return;
     setLoading(true);
     const sp = new URLSearchParams({
       page: String(page),
       pageSize: "15",
-      batchNumber: String(currentBatch),
+      batchNumber: String(viewedBatch),
     });
     if (activeTab === "selected") sp.set("selectedOnly", "true");
     if (searchQuery.trim()) {
@@ -125,7 +137,7 @@ export function AdminDashboard({ username }: { username: string }) {
       setData(json);
     }
     setLoading(false);
-  }, [page, currentBatch, activeTab, searchQuery]);
+  }, [page, viewedBatch, activeTab, searchQuery]);
 
   useEffect(() => {
     fetchData();
@@ -139,6 +151,15 @@ export function AdminDashboard({ username }: { username: string }) {
       setPage(1);
       setExpanded(null);
     }, 350);
+  };
+
+  const onBatchViewChange = (b: number) => {
+    setViewedBatch(b);
+    setPage(1);
+    setExpanded(null);
+    setData(null);
+    setInputQuery("");
+    setSearchQuery("");
   };
 
   const onTabChange = (tab: "all" | "selected") => {
@@ -232,16 +253,33 @@ export function AdminDashboard({ username }: { username: string }) {
           >
             Submissions
           </h1>
-          {currentBatch !== null && (
-            <span
-              className="rounded-full px-3 py-0.5 text-xs font-bold"
+          {viewedBatch !== null && (
+            <select
+              value={viewedBatch}
+              onChange={(e) => onBatchViewChange(Number(e.target.value))}
+              aria-label="View batch"
+              className="rounded-full px-3 py-0.5 text-xs font-bold outline-none"
               style={{
                 background: "var(--gf-primary)",
                 color: "var(--gf-primary-dark)",
                 letterSpacing: "0.04em",
+                border: "none",
+                cursor: "pointer",
               }}
             >
-              Batch {currentBatch}
+              {allBatches.map((b) => (
+                <option key={b} value={b}>
+                  Batch {b}{b === currentBatch ? " (current)" : ""}
+                </option>
+              ))}
+            </select>
+          )}
+          {viewedBatch !== null && currentBatch !== null && viewedBatch !== currentBatch && (
+            <span
+              className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+              style={{ background: "rgba(111,63,7,0.08)", color: "var(--gf-text-muted)" }}
+            >
+              Viewing history — read only
             </span>
           )}
         </div>
@@ -333,21 +371,23 @@ export function AdminDashboard({ username }: { username: string }) {
                 </TabButton>
               </div>
 
-              <button
-                onClick={() => setShowFinishModal(true)}
-                disabled={currentBatch === null}
-                className="my-1.5 mr-1 rounded-lg px-4 text-sm font-semibold transition-all disabled:opacity-40"
-                style={{
-                  height: "34px",
-                  background: "linear-gradient(135deg, var(--gf-primary) 0%, #e6a800 100%)",
-                  color: "var(--gf-primary-dark)",
-                  border: "none",
-                  boxShadow: "0 2px 8px rgba(111,63,7,0.3)",
-                  letterSpacing: "0.01em",
-                }}
-              >
-                ✓ Batch {currentBatch} Finished
-              </button>
+              {viewedBatch === currentBatch && (
+                <button
+                  onClick={() => setShowFinishModal(true)}
+                  disabled={currentBatch === null}
+                  className="my-1.5 mr-1 rounded-lg px-4 text-sm font-semibold transition-all disabled:opacity-40"
+                  style={{
+                    height: "34px",
+                    background: "linear-gradient(135deg, var(--gf-primary) 0%, #e6a800 100%)",
+                    color: "var(--gf-primary-dark)",
+                    border: "none",
+                    boxShadow: "0 2px 8px rgba(111,63,7,0.3)",
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  ✓ Batch {currentBatch} Finished
+                </button>
+              )}
             </div>
 
             {/* Table header */}
@@ -388,6 +428,7 @@ export function AdminDashboard({ username }: { username: string }) {
                     rowNumber={((data?.page ?? page) - 1) * (data?.pageSize ?? 15) + idx + 1}
                     open={expanded === s.id}
                     inSelectedTab={activeTab === "selected"}
+                    readOnly={viewedBatch !== currentBatch}
                     onToggle={() => setExpanded((cur) => (cur === s.id ? null : s.id))}
                     onSelect={async (selected) => { await onSelect(s.id, selected); }}
                     onDelete={async () => {
@@ -504,6 +545,7 @@ function Row({
   rowNumber,
   open,
   inSelectedTab,
+  readOnly,
   onToggle,
   onDelete,
   onSelect,
@@ -512,6 +554,7 @@ function Row({
   rowNumber: number;
   open: boolean;
   inSelectedTab: boolean;
+  readOnly?: boolean;
   onToggle: () => void;
   onDelete: () => void;
   onSelect: (selected: boolean) => Promise<void>;
@@ -574,6 +617,7 @@ function Row({
         {/* Select / Deselect button */}
         <button
           onClick={async () => {
+            if (readOnly) return;
             setSelectBusy(true);
             try {
               await onSelect(!sub.isSelected);
@@ -581,7 +625,8 @@ function Row({
               setSelectBusy(false);
             }
           }}
-          disabled={selectBusy}
+          disabled={selectBusy || readOnly}
+          title={readOnly ? "Viewing past batch — read only" : undefined}
           className="whitespace-nowrap rounded-full px-3.5 py-1 text-[11px] font-bold tracking-wide transition-all disabled:opacity-40"
           style={
             inSelectedTab && sub.isSelected
