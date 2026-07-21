@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentAdmin } from "@/lib/auth";
-import { listSubmissions } from "@/lib/mock-store";
+import { getCurrentBatch, getSubmissionById, listSubmissions, listSubmissionsForPrint } from "@/lib/mock-store";
 import { presignGet, s3Configured } from "@/lib/s3";
 import type { Submission } from "@/lib/types";
 import { AutoPrint } from "./AutoPrint";
@@ -12,6 +12,10 @@ type Search = {
   pageSize?: string;
   q?: string;
   field?: string;
+  id?: string;
+  batchNumber?: string;
+  batchScope?: string;
+  selectedOnly?: string;
 };
 
 export default async function PrintPage({
@@ -23,22 +27,38 @@ export default async function PrintPage({
   if (!admin) redirect("/admin/login");
 
   const sp = await searchParams;
-  const page = Math.max(1, Number(sp.page) || 1);
-  const pageSize = Math.min(50, Math.max(1, Number(sp.pageSize) || 10));
-  const q = sp.q ?? "";
-  const field = (sp.field as "all" | "facebook" | "viber" | "art") ?? "all";
 
-  const data = await listSubmissions({ page, pageSize, q, field });
+  let raw: Submission[];
+
+  if (sp.id) {
+    const single = await getSubmissionById(sp.id);
+    raw = single ? [single] : [];
+  } else if (sp.selectedOnly === "true") {
+    let batchNumber: number | undefined;
+    if (sp.batchScope !== "all") {
+      const parsed = Number(sp.batchNumber);
+      batchNumber = Number.isFinite(parsed) && sp.batchNumber ? parsed : await getCurrentBatch();
+    }
+    raw = await listSubmissionsForPrint({ batchNumber, selectedOnly: true });
+  } else {
+    const page = Math.max(1, Number(sp.page) || 1);
+    const pageSize = Math.min(50, Math.max(1, Number(sp.pageSize) || 10));
+    const q = sp.q ?? "";
+    const field = (sp.field as "all" | "facebook" | "viber" | "art") ?? "all";
+    const data = await listSubmissions({ page, pageSize, q, field });
+    raw = data.items;
+  }
+
   const items: Submission[] = s3Configured()
     ? await Promise.all(
-        data.items.map(async (s) => ({
+        raw.map(async (s) => ({
           ...s,
           nrcFront: await presignGet(s.nrcFront),
           nrcBack: await presignGet(s.nrcBack),
           portraits: await Promise.all(s.portraits.map((p) => presignGet(p))),
         })),
       )
-    : data.items;
+    : raw;
 
   return (
     <div className="mag-root">

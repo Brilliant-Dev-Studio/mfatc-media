@@ -249,6 +249,35 @@ export async function listSubmissions(opts: {
   };
 }
 
+export async function getSubmissionById(id: string): Promise<Submission | null> {
+  await ensureSchema();
+  const rows = (await sql`SELECT * FROM submissions WHERE id = ${id}`) as Row[];
+  return rows[0] ? rowToSubmission(rows[0]) : null;
+}
+
+export async function listSubmissionsForPrint(opts: {
+  batchNumber?: number;
+  selectedOnly?: boolean;
+}): Promise<Submission[]> {
+  await ensureSchema();
+  const selectedOnly = opts.selectedOnly ?? false;
+  const rows = (
+    opts.batchNumber !== undefined
+      ? ((await sql`
+          SELECT * FROM submissions
+          WHERE batch_number = ${opts.batchNumber}
+            AND (is_selected = TRUE OR NOT ${selectedOnly})
+          ORDER BY batch_number DESC, created_at DESC
+        `) as Row[])
+      : ((await sql`
+          SELECT * FROM submissions
+          WHERE (is_selected = TRUE OR NOT ${selectedOnly})
+          ORDER BY batch_number DESC, created_at DESC
+        `) as Row[])
+  );
+  return rows.map(rowToSubmission);
+}
+
 export async function deleteSubmission(id: string): Promise<boolean> {
   await ensureSchema();
   const rows = (await sql`

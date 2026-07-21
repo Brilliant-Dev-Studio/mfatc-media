@@ -330,6 +330,22 @@ export function AdminDashboard({ username }: { username: string }) {
               >
                 Download PDF
               </a>
+              <a
+                href={`/admin/print?${new URLSearchParams({ selectedOnly: "true", batchNumber: String(viewedBatch ?? "") }).toString()}`}
+                target="_blank"
+                rel="noreferrer"
+                className="gf-btn-outline inline-flex h-7.5 items-center px-3 text-xs"
+              >
+                Print Selected (Batch {viewedBatch ?? "…"})
+              </a>
+              <a
+                href={`/admin/print?${new URLSearchParams({ selectedOnly: "true", batchScope: "all" }).toString()}`}
+                target="_blank"
+                rel="noreferrer"
+                className="gf-btn-outline inline-flex h-7.5 items-center px-3 text-xs"
+              >
+                Print Selected (All Batches)
+              </a>
             </div>
           </div>
 
@@ -392,7 +408,7 @@ export function AdminDashboard({ username }: { username: string }) {
 
             {/* Table header */}
             <div
-              className="hidden grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px] gap-4 border-b px-5 py-3 text-[10.5px] font-bold uppercase tracking-widest sm:grid"
+              className="hidden grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px_36px] gap-4 border-b px-5 py-3 text-[10.5px] font-bold uppercase tracking-widest sm:grid"
               style={{
                 background: "linear-gradient(90deg, #3a1f04 0%, #5c3208 100%)",
                 borderColor: "rgba(253,200,58,0.2)",
@@ -405,6 +421,7 @@ export function AdminDashboard({ username }: { username: string }) {
               <span>Viber</span>
               <span>Statement</span>
               <span>Status</span>
+              <span></span>
               <span></span>
             </div>
 
@@ -570,7 +587,7 @@ function Row({
       style={{ borderColor: "var(--gf-border)" }}
     >
       <div
-        className="grid w-full grid-cols-[auto_1fr_auto_36px] items-center gap-4 px-5 py-3.5 transition-colors hover:bg-amber-50/40 sm:grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px]"
+        className="grid w-full grid-cols-[auto_1fr_auto_36px] items-center gap-4 px-5 py-3.5 transition-colors hover:bg-amber-50/40 sm:grid-cols-[40px_140px_1.4fr_1fr_2.5fr_auto_36px_36px]"
       >
         {/* Row number */}
         <span
@@ -639,8 +656,19 @@ function Row({
           {selectBusy ? "…" : inSelectedTab && sub.isSelected ? "Unselect" : sub.isSelected ? "✓ Selected" : "Select"}
         </button>
 
-        {/* Delete — hidden */}
-        <span className="hidden" />
+        {/* Individual print */}
+        <a
+          href={`/admin/print?id=${encodeURIComponent(sub.id)}`}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          aria-label="Print this candidate"
+          title="Print"
+          className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-black/5 sm:flex"
+          style={{ color: "var(--gf-text-muted)" }}
+        >
+          🖨
+        </a>
 
         {/* Toggle expand */}
         <button
